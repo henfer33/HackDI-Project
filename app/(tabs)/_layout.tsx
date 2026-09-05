@@ -31,9 +31,9 @@ export default function TabsLayout() {
       <Tabs.Screen
         name="index"
         options={{
-          title: homeLabel,
-          tabBarBadge: inbox || undefined,
-          tabBarBadgeStyle: { backgroundColor: C.gold, color: '#14301F', fontFamily: F.bold },
+          // Count lives in the label — a floating badge needs a circle to read
+          // as a badge, and there are no circles left in the app.
+          title: inbox ? `${homeLabel} (${inbox})` : homeLabel,
           tabBarIcon: ({ color, size }) => (
             <Ionicons name={homeIcon as any} size={size - 2} color={color} />
           ),
@@ -42,9 +42,7 @@ export default function TabsLayout() {
       <Tabs.Screen
         name="messages"
         options={{
-          title: 'Messages',
-          tabBarBadge: threads || undefined,
-          tabBarBadgeStyle: { backgroundColor: C.mint, color: '#14301F', fontFamily: F.bold },
+          title: threads ? `Messages (${threads})` : 'Messages',
           tabBarIcon: ({ color, size }) => (
             <Ionicons name="chatbubbles-outline" size={size - 2} color={color} />
           ),

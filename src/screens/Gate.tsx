@@ -33,8 +33,8 @@ export function GateTrail({ status, waliName, herName }: {
         const color = failed ? C.danger : done ? C.mint : active ? C.gold : C.faint;
         return (
           <View key={i} style={styles.step}>
-            <View style={[styles.dot, { borderColor: color, backgroundColor: 'transparent' }]}>
-              <Ionicons name={failed ? 'close' : s.icon} size={12} color={color} />
+            <View style={styles.dot}>
+              <Ionicons name={failed ? 'close' : s.icon} size={16} color={color} />
             </View>
             <Text style={[styles.label, { color }]} numberOfLines={2}>{s.label}</Text>
             {i < steps.length - 1 && <View style={[styles.bar, { backgroundColor: done ? C.mint : C.faint }]} />}
@@ -48,10 +48,7 @@ export function GateTrail({ status, waliName, herName }: {
 const styles = StyleSheet.create({
   wrap: { flexDirection: 'row', marginTop: 4, marginBottom: 4 },
   step: { flex: 1, alignItems: 'center' },
-  dot: {
-    width: 28, height: 28, borderRadius: 14, borderWidth: 1.5,
-    alignItems: 'center', justifyContent: 'center', marginBottom: 7,
-  },
+  dot: { width: 28, height: 28, alignItems: 'center', justifyContent: 'center', marginBottom: 7 },
   label: { fontFamily: F.sans, fontSize: 10.5, textAlign: 'center', lineHeight: 14, paddingHorizontal: 2 },
   bar: { position: 'absolute', height: 1.5, top: 13.5, left: '62%', right: '-38%' },
 });

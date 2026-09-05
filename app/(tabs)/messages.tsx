@@ -73,12 +73,9 @@ export default function Messages() {
 }
 
 const styles = StyleSheet.create({
-  avatar: {
-    width: 48, height: 48, borderRadius: 24, backgroundColor: 'transparent',
-    alignItems: 'center', justifyContent: 'center',
-    borderWidth: 1, borderColor: C.mintEdge,
-  },
-  avatarText: { fontFamily: F.display, fontSize: 21, color: C.mint },
+  // Just the initial — no ring, no fill.
+  avatar: { width: 40, alignItems: 'center', justifyContent: 'center' },
+  avatarText: { fontFamily: F.display, fontSize: 28, color: C.mint },
   name: { fontFamily: F.display, fontSize: 21, color: C.cream },
   preview: { fontFamily: F.sans, fontSize: 13.5, color: C.muted, marginTop: 3 },
   pills: { flexDirection: 'row', columnGap: 18, rowGap: 8, marginTop: 14, flexWrap: 'wrap' },
