@@ -70,7 +70,7 @@ export default function Person() {
               onPress={() => {
                 sendRequest(actor.id, p.id, note.trim());
                 if (router.canGoBack()) router.back();
-                else router.replace('/');
+                else router.replace('/home');
               }}
             />
           </Card>

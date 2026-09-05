@@ -29,7 +29,7 @@ export default function TabsLayout() {
         tabBarLabelStyle: { fontSize: 11, fontFamily: F.semi, marginTop: 2 },
       }}>
       <Tabs.Screen
-        name="index"
+        name="home"
         options={{
           // Count lives in the label — a floating badge needs a circle to read
           // as a badge, and there are no circles left in the app.

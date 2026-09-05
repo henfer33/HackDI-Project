@@ -51,6 +51,8 @@ interface Ctx {
   waliNotify: WaliNotify;
   setWaliNotify: (m: WaliNotify) => void;
   setWaliMaySend: (womanId: string, may: boolean) => void;
+  updateProfile: (id: string, patch: Partial<Profile>) => void;
+  updateWali: (id: string, patch: Partial<Wali>) => void;
 
   reset: () => void;
 }
@@ -235,6 +237,16 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
     }
   }, [meets, pull, systemNote]);
 
+  const updateProfile: Ctx['updateProfile'] = useCallback((id, patch) => {
+    if (isLive) remote.updateProfile(id, patch).then(pull);
+    else setProfiles((xs) => xs.map((p) => (p.id === id ? { ...p, ...patch } : p)));
+  }, [pull]);
+
+  const updateWali: Ctx['updateWali'] = useCallback((id, patch) => {
+    if (isLive) remote.updateWali(id, patch).then(pull);
+    else setWalis((xs) => xs.map((w) => (w.id === id ? { ...w, ...patch } : w)));
+  }, [pull]);
+
   const setWaliMaySend: Ctx['setWaliMaySend'] = useCallback((womanId, may) => {
     if (isLive) remote.setWaliMaySend(womanId, may).then(pull);
     else setProfiles((xs) => xs.map((p) => (p.id === womanId ? { ...p, waliMaySend: may } : p)));
@@ -259,7 +271,7 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
     sendRequest, waliDecide, womanDecide,
     sendMessage, proposeMeet, confirmMeet, meetFor,
     threadsFor, inboxFor, lastMessage, counterpart,
-    waliNotify, setWaliNotify, setWaliMaySend,
+    waliNotify, setWaliNotify, setWaliMaySend, updateProfile, updateWali,
     reset,
   }), [
     profiles, walis, requests, messages, meets, actor, offline, loading,

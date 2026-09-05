@@ -60,6 +60,22 @@ export const remote = {
     supabase!.from('meets').upsert({
       request_id: m.requestId, initiated_by: m.initiatedBy, confirmed_by: m.confirmedBy ?? null,
     }),
+  updateProfile: (id: string, patch: Partial<Profile>) =>
+    supabase!.from('profiles').update({
+      ...(patch.name !== undefined && { name: patch.name }),
+      ...(patch.age !== undefined && { age: patch.age }),
+      ...(patch.location !== undefined && { location: patch.location }),
+      ...(patch.education !== undefined && { education: patch.education }),
+      ...(patch.career !== undefined && { career: patch.career }),
+      ...(patch.timeline !== undefined && { timeline: patch.timeline }),
+      ...(patch.about !== undefined && { about: patch.about }),
+    }).eq('id', id),
+  updateWali: (id: string, patch: Partial<Wali>) =>
+    supabase!.from('walis').update({
+      ...(patch.name !== undefined && { name: patch.name }),
+      ...(patch.relationship !== undefined && { relationship: patch.relationship }),
+      ...(patch.contact !== undefined && { contact: patch.contact }),
+    }).eq('id', id),
   setWaliMaySend: (womanId: string, may: boolean) =>
     supabase!.from('profiles').update({ wali_may_send: may }).eq('id', womanId),
   insertProfile: (p: Profile) =>

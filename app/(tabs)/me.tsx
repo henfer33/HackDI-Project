@@ -1,9 +1,11 @@
 import { StyleSheet, Text, View } from 'react-native';
 import { useApp } from '../../src/store';
 import { C, F } from '../../src/theme';
-import { Card, Field, Pill, Screen, ScreenHeader, SectionLabel } from '../../src/ui';
+import { useRouter } from 'expo-router';
+import { Button, Card, Field, Pill, Screen, ScreenHeader, SectionLabel } from '../../src/ui';
 
 export default function Me() {
+  const router = useRouter();
   const { actor, profile, wali, requests, threadsFor } = useApp();
 
   const isWali = actor.role === 'wali';
@@ -18,12 +20,21 @@ export default function Me() {
 
   return (
     <Screen>
+      <View style={{ marginBottom: 4 }} />
       <ScreenHeader
         eyebrow={isWali ? 'Guardian' : actor.role === 'man' ? 'Suitor' : 'Seeking marriage'}
         icon={isWali ? 'shield-checkmark' : 'leaf'}
         title={(g?.name ?? me?.name ?? '').split(' ')[0]}
         subtitle={g ? `${g.relationship} of ${ward?.name}` : `${me?.age} · ${me?.location}`}
       />
+
+      <Button
+        title="Edit profile"
+        icon="create-outline"
+        tone="ghost"
+        onPress={() => router.push('/edit-profile')}
+      />
+      <View style={{ height: 18 }} />
 
       {isWali && g && (
         <>

@@ -5,6 +5,7 @@ import { useApp } from '../src/store';
 import { C, F, S } from '../src/theme';
 import { Button, Card, PageTitle, Screen, SectionLabel } from '../src/ui';
 import { TIMELINES, Timeline } from '../src/types';
+import { contactKind } from '../src/notify';
 
 export default function Onboarding() {
   const router = useRouter();
@@ -24,7 +25,9 @@ export default function Onboarding() {
   const [waliContact, setWaliContact] = useState('');
 
   const coreDone = name && age && location && education && career;
-  const waliDone = role === 'man' || (waliName && waliContact);
+  // A wali who cannot be reached is not attached in any useful sense.
+  const contactOk = contactKind(waliContact) !== 'invalid';
+  const waliDone = role === 'man' || (!!waliName && contactOk);
   const canSubmit = Boolean(coreDone && waliDone);
 
   const submit = () => {
@@ -36,7 +39,7 @@ export default function Onboarding() {
       addWali({ name: waliName, relationship: waliRel, contact: waliContact, wardId: id });
     }
     setActor({ role, id });
-    router.replace('/');
+    router.replace('/home');
   };
 
   return (
@@ -131,9 +134,11 @@ export default function Onboarding() {
       <Button title="Create profile" onPress={submit} disabled={!canSubmit} />
       {!canSubmit && (
         <Text style={styles.blocked}>
-          {role === 'woman' && coreDone && !waliDone
-            ? 'Add your wali to activate your profile.'
-            : 'Fill in the fields above to continue.'}
+          {role === 'woman' && coreDone && waliName && !contactOk
+            ? 'That does not look like a phone number or an email address.'
+            : role === 'woman' && coreDone && !waliDone
+              ? 'Add your wali to activate your profile.'
+              : 'Fill in the fields above to continue.'}
         </Text>
       )}
     </Screen>

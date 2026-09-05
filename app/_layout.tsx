@@ -30,7 +30,9 @@ export default function RootLayout() {
           headerShadowVisible: false,
           contentStyle: { backgroundColor: C.bg },
         }}>
+        <Stack.Screen name="index" options={{ headerShown: false }} />
         <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+        <Stack.Screen name="edit-profile" options={{ title: '' }} />
         <Stack.Screen name="person/[id]" options={{ title: '' }} />
         {/* The chat draws its own banner and back control, so the composer has
             no stack header to offset past when the keyboard opens. */}
