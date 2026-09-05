@@ -51,29 +51,44 @@ the mainstream apps it is competing with, not more.
 none. This is enforced in `src/store.tsx`, not just hidden in the UI — `sendMessage`
 rejects any sender who is not the man or the woman on that request.
 
+**Everyone party to a chat can reach it.** The suitor, the woman and the wali each
+have a Messages tab. The wali's lists the same conversations, marked read-only.
+
 ## Layout
 
 ```
 app/
-  _layout.tsx       root stack + provider
-  index.tsx         demo home / role switcher
-  onboarding.tsx    profile creation; wali capture is required for women
-  browse.tsx        men browse and filter
-  profile/[id].tsx  profile detail, send request
-  wali.tsx          wali inbox — approve / decline
-  requests.tsx      her inbox — accept / decline (post-wali)
-  chat/[id].tsx     group chat, read-only for the wali
+  _layout.tsx        root stack, font loading, provider
+  (tabs)/
+    _layout.tsx      bottom tabs; labels and badges follow the current role
+    index.tsx        one tab, three faces — Find / Requests / Review
+    messages.tsx     conversations for whoever is viewing
+    me.tsx           own profile; the wali sees his ward instead
+    settings.tsx     role switcher, locked guardianship rows, wali notify method
+  person/[id].tsx    profile detail, send request, gate trail
+  chat/[id].tsx      group chat, read-only for the wali
+  onboarding.tsx     profile creation; wali capture required for women
 src/
-  types.ts          domain model and request lifecycle
-  store.tsx         in-memory store; enforces the rules above
-  seed.ts           demo profiles and walis
-  theme.ts, ui.tsx  shared styling and components
+  types.ts           domain model and request lifecycle
+  store.tsx          in-memory store; enforces the rules above
+  seed.ts            demo profiles and walis
+  theme.ts, ui.tsx   dark jungle palette and the component kit
+  screens/
+    Browse.tsx       filterable list of women's profiles
+    HerRequests.tsx  her inbox
+    WaliInbox.tsx    his inbox, with a small activity summary
+    Gate.tsx         the two-gate progress trail, drawn
 ```
 
 ## Demoing it
 
-The home screen is a role switcher — tap between Yusuf (man), Maryam (woman) and
-Imran (wali) to walk the whole flow on one device. "Reset demo data" clears it.
+Settings → "Viewing as" switches between Yusuf (suitor), Maryam (woman) and Imran
+(wali) so the whole flow runs on one device. The tab bar relabels itself per role and
+badges the pending count. "Reset demo data" clears everything.
+
+Three rows in Settings under **Guardianship** are deliberately un-togglable — wali
+oversight, her consent, and the wali being unable to send messages. That padlock is
+the pitch: on other apps the guardian is a feature you can switch off.
 
 State is in memory only, so a reload starts over. That is deliberate for a 48-hour
 build; there is no backend to configure and nothing to fail on venue wifi.

@@ -66,3 +66,6 @@ export interface Actor {
   role: Role;
   id: string;
 }
+
+/** How the wali is reached when he has no account yet (PRD open question). */
+export type WaliNotify = 'sms' | 'email' | 'app';

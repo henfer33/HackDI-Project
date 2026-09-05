@@ -1,11 +1,14 @@
+import { Ionicons } from '@expo/vector-icons';
 import { useLocalSearchParams } from 'expo-router';
+import { LinearGradient } from 'expo-linear-gradient';
 import { useRef, useState } from 'react';
 import {
   KeyboardAvoidingView, Platform, Pressable, ScrollView,
   StyleSheet, Text, TextInput, View,
 } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { useApp } from '../../src/store';
-import { C, S } from '../../src/theme';
+import { C, F, S } from '../../src/theme';
 import { Button, Pill } from '../../src/ui';
 
 export default function Chat() {
@@ -20,7 +23,7 @@ export default function Chat() {
   const [draft, setDraft] = useState('');
   const scroller = useRef<ScrollView>(null);
 
-  if (!r) return <Text style={{ padding: 20 }}>Conversation not found.</Text>;
+  if (!r) return <View style={styles.fill}><Text style={{ color: C.cream, padding: 20 }}>Conversation not found.</Text></View>;
 
   const man = profile(r.manId);
   const woman = profile(r.womanId);
@@ -29,157 +32,161 @@ export default function Chat() {
   const isWali = actor.role === 'wali';
   const thread = messages.filter((m) => m.requestId === requestId);
   const meet = meetFor(requestId);
+  const meetDone = meet?.confirmedBy;
+  const canConfirm = meet && !meet.confirmedBy && meet.initiatedBy !== actor.id && !isWali;
 
-  const nameFor = (senderId: string) =>
-    senderId === man?.id ? man?.name : senderId === woman?.id ? woman?.name : g?.name ?? 'Unknown';
+  const nameFor = (sid: string) =>
+    sid === man?.id ? man?.name : sid === woman?.id ? woman?.name : g?.name ?? '';
 
   const send = () => {
-    if (isWali) return; // enforced here as well as in the UI
     sendMessage(requestId, actor.id, draft);
     setDraft('');
-    setTimeout(() => scroller.current?.scrollToEnd({ animated: true }), 50);
+    setTimeout(() => scroller.current?.scrollToEnd({ animated: true }), 60);
   };
 
-  const canConfirmMeet = meet && !meet.confirmedBy && meet.initiatedBy !== actor.id && !isWali;
-  const meetDone = meet?.confirmedBy;
-
   return (
-    <KeyboardAvoidingView
-      style={{ flex: 1, backgroundColor: C.bg }}
-      behavior={Platform.OS === 'ios' ? 'padding' : undefined}
-      keyboardVerticalOffset={90}>
-      <View style={styles.banner}>
-        <Text style={styles.bannerText}>
-          {man?.name.split(' ')[0]} · {woman?.name.split(' ')[0]} · {g?.name.split(' ')[0]} (wali)
-        </Text>
-        <Pill label={isWali ? 'Read-only' : 'Wali is reading'} tone="gold" />
-      </View>
-
-      <ScrollView
-        ref={scroller}
-        style={{ flex: 1 }}
-        contentContainerStyle={{ padding: S.pad, paddingBottom: 10 }}
-        onContentSizeChange={() => scroller.current?.scrollToEnd({ animated: false })}>
-        {thread.length === 0 && (
-          <Text style={styles.hint}>
-            The conversation starts here. Everything sent is visible to {g?.name}.
+    <LinearGradient colors={[C.bgTop, C.bg]} locations={[0, 0.5]} style={styles.fill}>
+      <KeyboardAvoidingView
+        style={styles.fill}
+        behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+        keyboardVerticalOffset={92}>
+        <View style={styles.banner}>
+          <Ionicons name="shield-checkmark" size={15} color={C.gold} />
+          <Text style={styles.bannerText}>
+            {man?.name.split(' ')[0]} · {woman?.name.split(' ')[0]} · {g?.name.split(' ')[0]}
           </Text>
-        )}
+          <Pill label={isWali ? 'Read-only' : 'Wali is reading'} tone="gold" />
+        </View>
 
-        {thread.map((m) => {
-          if (m.system) {
-            return (
-              <View key={m.id} style={styles.system}>
-                <Text style={styles.systemText}>{m.text}</Text>
-              </View>
-            );
-          }
-          const mine = m.senderId === actor.id;
-          return (
-            <View key={m.id} style={[styles.bubbleWrap, mine ? styles.right : styles.left]}>
-              {!mine && <Text style={styles.sender}>{nameFor(m.senderId)}</Text>}
-              <View style={[styles.bubble, mine ? styles.bubbleMine : styles.bubbleOther]}>
-                <Text style={[styles.msg, mine && { color: '#fff' }]}>{m.text}</Text>
-              </View>
-            </View>
-          );
-        })}
-
-        {meetDone && (
-          <View style={styles.handoff}>
-            <Text style={styles.handoffTitle}>Khitbah steps back</Text>
-            <Text style={styles.handoffText}>
-              Both have agreed to meet. Arranging it is for the family, not the app. Speak to{' '}
-              {g?.name} ({g?.relationship.toLowerCase()}) at {g?.contact}.
+        <ScrollView
+          ref={scroller}
+          style={styles.fill}
+          contentContainerStyle={{ padding: S.pad, paddingBottom: 12 }}
+          onContentSizeChange={() => scroller.current?.scrollToEnd({ animated: false })}
+          showsVerticalScrollIndicator={false}>
+          <View style={styles.adab}>
+            <Ionicons name="leaf-outline" size={14} color={C.mint} />
+            <Text style={styles.adabText}>
+              Keep it purposeful and modest. Everything here is seen by {g?.name}.
             </Text>
           </View>
+
+          {thread.map((m) => {
+            if (m.system) {
+              return (
+                <View key={m.id} style={styles.system}>
+                  <Text style={styles.systemText}>{m.text}</Text>
+                </View>
+              );
+            }
+            const mine = m.senderId === actor.id;
+            return (
+              <View key={m.id} style={[styles.wrap, mine ? styles.right : styles.left]}>
+                {!mine && <Text style={styles.sender}>{nameFor(m.senderId)}</Text>}
+                <View style={[styles.bubble, mine ? styles.mine : styles.other]}>
+                  <Text style={[styles.msg, mine && { color: '#052E16' }]}>{m.text}</Text>
+                </View>
+              </View>
+            );
+          })}
+
+          {meetDone && (
+            <View style={styles.handoff}>
+              <Ionicons name="people" size={22} color={C.gold} />
+              <Text style={styles.handoffTitle}>Khitbah steps back</Text>
+              <Text style={styles.handoffText}>
+                Both have agreed to meet. Arranging it belongs to the family, not the app. Speak to{' '}
+                {g?.name} ({g?.relationship.toLowerCase()}) at {g?.contact}.
+              </Text>
+            </View>
+          )}
+        </ScrollView>
+
+        {!meetDone && !isWali && (
+          <View style={{ paddingHorizontal: S.pad, paddingBottom: 6 }}>
+            {!meet && (
+              <Pressable onPress={() => proposeMeet(requestId, actor.id)}>
+                <Text style={styles.meetLink}>Ready to meet in person →</Text>
+              </Pressable>
+            )}
+            {meet && !canConfirm && <Text style={styles.meetPending}>Waiting on the other party to agree.</Text>}
+            {canConfirm && <Button title="Yes, ready to meet" icon="people-outline" onPress={() => confirmMeet(requestId, actor.id)} />}
+          </View>
         )}
-      </ScrollView>
 
-      {!meetDone && !isWali && (
-        <View style={styles.meetBar}>
-          {!meet && (
-            <Pressable onPress={() => proposeMeet(requestId, actor.id)}>
-              <Text style={styles.meetLink}>Ready to meet in person →</Text>
-            </Pressable>
+        <SafeAreaView edges={['bottom']} style={{ backgroundColor: isWali ? C.goldDim : 'rgba(0,0,0,0.3)' }}>
+          {isWali ? (
+            <View style={styles.readonly}>
+              <Ionicons name="eye-outline" size={16} color={C.gold} />
+              <Text style={styles.readonlyText}>
+                You are here as the wali. You can read everything; you cannot send messages.
+              </Text>
+            </View>
+          ) : (
+            <View style={styles.composer}>
+              <TextInput
+                style={styles.input}
+                placeholder="Write a message"
+                placeholderTextColor={C.faint}
+                value={draft}
+                onChangeText={setDraft}
+                multiline
+              />
+              <Pressable onPress={send} disabled={!draft.trim()} style={[styles.send, !draft.trim() && { opacity: 0.3 }]}>
+                <Ionicons name="arrow-up" size={19} color="#052E16" />
+              </Pressable>
+            </View>
           )}
-          {meet && !canConfirmMeet && (
-            <Text style={styles.meetPending}>Waiting on the other party to agree to meet.</Text>
-          )}
-          {canConfirmMeet && (
-            <Button title="Yes, ready to meet" onPress={() => confirmMeet(requestId, actor.id)} />
-          )}
-        </View>
-      )}
-
-      {isWali ? (
-        <View style={styles.readonly}>
-          <Text style={styles.readonlyText}>
-            You are present as the wali. You can read everything here; you cannot send messages.
-          </Text>
-        </View>
-      ) : (
-        <View style={styles.composer}>
-          <TextInput
-            style={styles.input}
-            placeholder="Write a message"
-            placeholderTextColor={C.muted}
-            value={draft}
-            onChangeText={setDraft}
-            multiline
-          />
-          <Pressable onPress={send} style={styles.sendBtn} disabled={!draft.trim()}>
-            <Text style={[styles.sendText, !draft.trim() && { opacity: 0.35 }]}>Send</Text>
-          </Pressable>
-        </View>
-      )}
-    </KeyboardAvoidingView>
+        </SafeAreaView>
+      </KeyboardAvoidingView>
+    </LinearGradient>
   );
 }
 
 const styles = StyleSheet.create({
+  fill: { flex: 1, backgroundColor: C.bg },
   banner: {
-    flexDirection: 'row', alignItems: 'center', gap: 10,
-    paddingHorizontal: S.pad, paddingVertical: 11,
-    backgroundColor: C.goldSoft, borderBottomWidth: 1, borderBottomColor: C.line,
+    flexDirection: 'row', alignItems: 'center', gap: 9,
+    paddingHorizontal: S.pad, paddingVertical: 12,
+    backgroundColor: C.goldDim, borderBottomWidth: 1, borderBottomColor: 'rgba(242,194,48,0.25)',
   },
-  bannerText: { flex: 1, fontSize: 13, color: C.ink, fontWeight: '500' },
-  hint: { color: C.muted, fontSize: 14, textAlign: 'center', paddingVertical: 24, lineHeight: 20 },
-  bubbleWrap: { marginBottom: 12, maxWidth: '82%' },
+  bannerText: { flex: 1, fontSize: 13.5, color: C.cream, fontWeight: '600' },
+  adab: {
+    flexDirection: 'row', alignItems: 'center', gap: 9,
+    backgroundColor: C.mintDim, borderRadius: 14, padding: 12, marginBottom: 18,
+  },
+  adabText: { flex: 1, fontSize: 12.5, color: C.soft, lineHeight: 18 },
+  wrap: { marginBottom: 13, maxWidth: '84%' },
   left: { alignSelf: 'flex-start' },
   right: { alignSelf: 'flex-end' },
-  sender: { fontSize: 12, color: C.muted, marginBottom: 4, marginLeft: 4 },
-  bubble: { borderRadius: 15, paddingHorizontal: 14, paddingVertical: 10 },
-  bubbleMine: { backgroundColor: C.green, borderBottomRightRadius: 4 },
-  bubbleOther: { backgroundColor: '#fff', borderWidth: 1, borderColor: C.line, borderBottomLeftRadius: 4 },
-  msg: { fontSize: 15, color: C.ink, lineHeight: 21 },
+  sender: { fontSize: 11.5, color: C.muted, marginBottom: 5, marginLeft: 6 },
+  bubble: { borderRadius: 20, paddingHorizontal: 15, paddingVertical: 11 },
+  mine: { backgroundColor: C.mint, borderBottomRightRadius: 6 },
+  other: { backgroundColor: C.card, borderWidth: 1, borderColor: C.cardEdge, borderBottomLeftRadius: 6 },
+  msg: { fontSize: 15, color: C.cream, lineHeight: 21 },
   system: {
-    backgroundColor: C.greenSoft, borderRadius: 10, padding: 12,
-    marginBottom: 14, alignSelf: 'center', maxWidth: '92%',
+    backgroundColor: 'rgba(255,255,255,0.05)', borderRadius: 14, padding: 13,
+    marginBottom: 16, alignSelf: 'center', maxWidth: '94%',
   },
-  systemText: { fontSize: 13, color: C.green, textAlign: 'center', lineHeight: 19 },
+  systemText: { fontSize: 12.5, color: C.soft, textAlign: 'center', lineHeight: 19 },
   handoff: {
-    backgroundColor: C.goldSoft, borderWidth: 1, borderColor: C.gold,
-    borderRadius: 14, padding: 18, marginTop: 8,
+    backgroundColor: C.goldDim, borderWidth: 1, borderColor: 'rgba(242,194,48,0.4)',
+    borderRadius: S.radius, padding: 20, marginTop: 10, alignItems: 'center', gap: 4,
   },
-  handoffTitle: { fontSize: 16, fontWeight: '700', color: C.gold, marginBottom: 7 },
-  handoffText: { fontSize: 14, color: C.ink, lineHeight: 21 },
-  meetBar: { paddingHorizontal: S.pad, paddingBottom: 8 },
-  meetLink: { color: C.green, fontSize: 14, fontWeight: '600', textAlign: 'center', paddingVertical: 10 },
-  meetPending: { color: C.muted, fontSize: 13, textAlign: 'center', paddingVertical: 10 },
-  composer: {
-    flexDirection: 'row', alignItems: 'flex-end', gap: 10,
-    padding: 12, borderTopWidth: 1, borderTopColor: C.line, backgroundColor: '#fff',
-  },
+  handoffTitle: { fontFamily: F.display, fontSize: 21, color: C.gold, marginTop: 6 },
+  handoffText: { fontSize: 13.5, color: C.cream, lineHeight: 21, textAlign: 'center', marginTop: 6 },
+  meetLink: { color: C.mint, fontSize: 14, fontWeight: '700', textAlign: 'center', paddingVertical: 12 },
+  meetPending: { color: C.muted, fontSize: 13, textAlign: 'center', paddingVertical: 12 },
+  composer: { flexDirection: 'row', alignItems: 'flex-end', gap: 10, padding: 12 },
   input: {
-    flex: 1, borderWidth: 1, borderColor: C.line, borderRadius: 20,
-    paddingHorizontal: 15, paddingVertical: 10, fontSize: 15, color: C.ink, maxHeight: 110,
+    flex: 1, borderWidth: 1, borderColor: C.cardEdge, borderRadius: S.pill,
+    paddingHorizontal: 17, paddingVertical: 12, fontSize: 15, color: C.cream, maxHeight: 110,
+    backgroundColor: 'rgba(0,0,0,0.25)',
   },
-  sendBtn: { paddingHorizontal: 8, paddingVertical: 12 },
-  sendText: { color: C.green, fontWeight: '700', fontSize: 15 },
-  readonly: {
-    padding: 16, borderTopWidth: 1, borderTopColor: C.gold,
-    backgroundColor: C.goldSoft,
+  send: {
+    width: 44, height: 44, borderRadius: 22, backgroundColor: C.mint,
+    alignItems: 'center', justifyContent: 'center',
   },
-  readonlyText: { fontSize: 13, color: C.gold, textAlign: 'center', lineHeight: 19, fontWeight: '500' },
+  readonly: { flexDirection: 'row', alignItems: 'center', gap: 10, padding: 16 },
+  readonlyText: { flex: 1, fontSize: 12.5, color: C.gold, lineHeight: 19, fontWeight: '500' },
 });

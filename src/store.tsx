@@ -1,6 +1,6 @@
 import React, { createContext, useCallback, useContext, useMemo, useState } from 'react';
 import { SEED_MESSAGES, SEED_PROFILES, SEED_REQUESTS, SEED_WALIS } from './seed';
-import { Actor, MatchRequest, MeetIntent, Message, Profile, Wali } from './types';
+import { Actor, MatchRequest, MeetIntent, Message, Profile, Wali, WaliNotify } from './types';
 
 let seq = 0;
 const uid = (p: string) => `${p}${Date.now().toString(36)}${(seq++).toString(36)}`;
@@ -30,6 +30,16 @@ interface Ctx {
   confirmMeet: (requestId: string, by: string) => void;
   meetFor: (requestId: string) => MeetIntent | undefined;
 
+  /** Accepted conversations this actor is party to (the wali included, read-only). */
+  threadsFor: (actor: Actor) => MatchRequest[];
+  /** Requests awaiting this actor's decision. */
+  inboxFor: (actor: Actor) => MatchRequest[];
+  lastMessage: (requestId: string) => Message | undefined;
+  counterpart: (r: MatchRequest, actor: Actor) => Profile | undefined;
+
+  waliNotify: WaliNotify;
+  setWaliNotify: (m: WaliNotify) => void;
+
   reset: () => void;
 }
 
@@ -42,11 +52,51 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
   const [messages, setMessages] = useState<Message[]>(SEED_MESSAGES);
   const [meets, setMeets] = useState<MeetIntent[]>([]);
   const [actor, setActor] = useState<Actor>({ role: 'man', id: 'm1' });
+  const [waliNotify, setWaliNotify] = useState<WaliNotify>('sms');
 
   const profile = useCallback((id: string) => profiles.find((p) => p.id === id), [profiles]);
   const wali = useCallback((id: string) => walis.find((w) => w.id === id), [walis]);
   const request = useCallback((id: string) => requests.find((r) => r.id === id), [requests]);
   const meetFor = useCallback((id: string) => meets.find((m) => m.requestId === id), [meets]);
+
+  const threadsFor = useCallback<Ctx['threadsFor']>(
+    (a) =>
+      requests.filter(
+        (r) =>
+          r.status === 'accepted' &&
+          (a.role === 'wali' ? r.waliId === a.id : r.manId === a.id || r.womanId === a.id),
+      ),
+    [requests],
+  );
+
+  const inboxFor = useCallback<Ctx['inboxFor']>(
+    (a) =>
+      requests.filter((r) =>
+        a.role === 'wali'
+          ? r.waliId === a.id && r.status === 'pending_wali'
+          : a.role === 'woman'
+            ? r.womanId === a.id && r.status === 'pending_woman'
+            : false,
+      ),
+    [requests],
+  );
+
+  const lastMessage = useCallback<Ctx['lastMessage']>(
+    (rid) => {
+      const t = messages.filter((m) => m.requestId === rid);
+      return t[t.length - 1];
+    },
+    [messages],
+  );
+
+  const counterpart = useCallback<Ctx['counterpart']>(
+    (r, a) => {
+      if (a.role === 'man') return profiles.find((p) => p.id === r.womanId);
+      if (a.role === 'woman') return profiles.find((p) => p.id === r.manId);
+      return profiles.find((p) => p.id === r.manId); // wali sees the suitor
+    },
+    [profiles],
+  );
 
   const addProfile: Ctx['addProfile'] = useCallback((p) => {
     const id = uid(p.role === 'man' ? 'm' : 'w');
@@ -171,6 +221,7 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
     setMessages([]);
     setMeets([]);
     setActor({ role: 'man', id: 'm1' });
+    setWaliNotify('sms');
   }, []);
 
   const value = useMemo<Ctx>(
@@ -180,10 +231,13 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
       addProfile, addWali,
       sendRequest, waliDecide, womanDecide,
       sendMessage, proposeMeet, confirmMeet, meetFor,
+      threadsFor, inboxFor, lastMessage, counterpart,
+      waliNotify, setWaliNotify,
       reset,
     }),
     [profiles, walis, requests, messages, meets, actor, profile, wali, request, addProfile, addWali,
-     sendRequest, waliDecide, womanDecide, sendMessage, proposeMeet, confirmMeet, meetFor, reset],
+     sendRequest, waliDecide, womanDecide, sendMessage, proposeMeet, confirmMeet, meetFor,
+     threadsFor, inboxFor, lastMessage, counterpart, waliNotify, reset],
   );
 
   // Dev-only handle so the flow can be driven and inspected without tapping through

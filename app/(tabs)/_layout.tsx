@@ -1,0 +1,73 @@
+import { Ionicons } from '@expo/vector-icons';
+import { Tabs } from 'expo-router';
+import { useApp } from '../../src/store';
+import { C } from '../../src/theme';
+
+export default function TabsLayout() {
+  const { actor, inboxFor, threadsFor } = useApp();
+  const inbox = inboxFor(actor).length;
+  const threads = threadsFor(actor).length;
+
+  const homeLabel =
+    actor.role === 'man' ? 'Find' : actor.role === 'woman' ? 'Requests' : 'Review';
+  const homeIcon =
+    actor.role === 'man' ? 'search' : actor.role === 'woman' ? 'mail' : 'shield-checkmark';
+
+  return (
+    <Tabs
+      screenOptions={{
+        headerShown: false,
+        tabBarActiveTintColor: C.mint,
+        tabBarInactiveTintColor: C.muted,
+        tabBarStyle: {
+          backgroundColor: C.bgTop,
+          borderTopColor: C.cardEdge,
+          borderTopWidth: 1,
+          height: 86,
+          paddingTop: 9,
+        },
+        tabBarLabelStyle: { fontSize: 11, fontWeight: '600', marginTop: 2 },
+      }}>
+      <Tabs.Screen
+        name="index"
+        options={{
+          title: homeLabel,
+          tabBarBadge: inbox || undefined,
+          tabBarBadgeStyle: { backgroundColor: C.gold, color: '#2A1F00', fontWeight: '700' },
+          tabBarIcon: ({ color, size }) => (
+            <Ionicons name={homeIcon as any} size={size - 2} color={color} />
+          ),
+        }}
+      />
+      <Tabs.Screen
+        name="messages"
+        options={{
+          title: 'Messages',
+          tabBarBadge: threads || undefined,
+          tabBarBadgeStyle: { backgroundColor: C.mint, color: '#052E16', fontWeight: '700' },
+          tabBarIcon: ({ color, size }) => (
+            <Ionicons name="chatbubbles-outline" size={size - 2} color={color} />
+          ),
+        }}
+      />
+      <Tabs.Screen
+        name="me"
+        options={{
+          title: 'Profile',
+          tabBarIcon: ({ color, size }) => (
+            <Ionicons name="person-outline" size={size - 2} color={color} />
+          ),
+        }}
+      />
+      <Tabs.Screen
+        name="settings"
+        options={{
+          title: 'Settings',
+          tabBarIcon: ({ color, size }) => (
+            <Ionicons name="settings-outline" size={size - 2} color={color} />
+          ),
+        }}
+      />
+    </Tabs>
+  );
+}
