@@ -23,6 +23,8 @@ interface Ctx {
   live: boolean;
   /** Live but the connection is not currently up. */
   offline: boolean;
+  /** First load from the backend has not returned yet. */
+  loading: boolean;
 
   setActor: (a: Actor) => void;
   profile: (id: string) => Profile | undefined;
@@ -56,11 +58,14 @@ interface Ctx {
 const AppCtx = createContext<Ctx | null>(null);
 
 export function AppProvider({ children }: { children: React.ReactNode }) {
-  const [profiles, setProfiles] = useState<Profile[]>(SEED_PROFILES);
-  const [walis, setWalis] = useState<Wali[]>(SEED_WALIS);
-  const [requests, setRequests] = useState<MatchRequest[]>(SEED_REQUESTS);
-  const [messages, setMessages] = useState<Message[]>(SEED_MESSAGES);
+  // When a backend is configured the seed arrays would flash on screen and then
+  // be replaced, so start empty and let `loading` cover the gap.
+  const [profiles, setProfiles] = useState<Profile[]>(isLive ? [] : SEED_PROFILES);
+  const [walis, setWalis] = useState<Wali[]>(isLive ? [] : SEED_WALIS);
+  const [requests, setRequests] = useState<MatchRequest[]>(isLive ? [] : SEED_REQUESTS);
+  const [messages, setMessages] = useState<Message[]>(isLive ? [] : SEED_MESSAGES);
   const [meets, setMeets] = useState<MeetIntent[]>([]);
+  const [loading, setLoading] = useState(isLive);
   const [actor, setActor] = useState<Actor>({ role: 'man', id: 'm1' });
   const [waliNotify, setWaliNotify] = useState<WaliNotify>('sms');
   const [offline, setOffline] = useState(false);
@@ -82,6 +87,8 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
     } catch {
       // Keep whatever is on screen; the demo continues on the last good data.
       setOffline(true);
+    } finally {
+      setLoading(false);
     }
   }, []);
 
@@ -246,7 +253,7 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
 
   const value = useMemo<Ctx>(() => ({
     profiles, walis, requests, messages, meets, actor,
-    live: isLive, offline,
+    live: isLive, offline, loading,
     setActor, profile, wali, request,
     addProfile, addWali,
     sendRequest, waliDecide, womanDecide,
@@ -255,7 +262,7 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
     waliNotify, setWaliNotify, setWaliMaySend,
     reset,
   }), [
-    profiles, walis, requests, messages, meets, actor, offline,
+    profiles, walis, requests, messages, meets, actor, offline, loading,
     profile, wali, request, addProfile, addWali,
     sendRequest, waliDecide, womanDecide, sendMessage, proposeMeet, confirmMeet, meetFor,
     threadsFor, inboxFor, lastMessage, counterpart, waliNotify, setWaliMaySend, reset,

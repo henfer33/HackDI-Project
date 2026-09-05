@@ -60,11 +60,28 @@ export default function Onboarding() {
 
       <Card>
         <SectionLabel>About you</SectionLabel>
-        <TextInput style={styles.input} placeholder="Full name" placeholderTextColor={C.faint} value={name} onChangeText={setName} />
-        <TextInput style={styles.input} placeholder="Age" placeholderTextColor={C.faint} keyboardType="number-pad" value={age} onChangeText={setAge} />
-        <TextInput style={styles.input} placeholder="Location" placeholderTextColor={C.faint} value={location} onChangeText={setLocation} />
-        <TextInput style={styles.input} placeholder="Education" placeholderTextColor={C.faint} value={education} onChangeText={setEducation} />
-        <TextInput style={styles.input} placeholder="Career" placeholderTextColor={C.faint} value={career} onChangeText={setCareer} />
+        <TextInput
+          style={styles.input} placeholder="Full name" placeholderTextColor={C.faint}
+          value={name} onChangeText={setName}
+          autoCapitalize="words" autoCorrect={false} returnKeyType="next" />
+        <TextInput
+          style={styles.input} placeholder="Age" placeholderTextColor={C.faint}
+          keyboardType="number-pad" value={age}
+          // A number pad has no return key, so strip anything non-numeric as it
+          // is typed rather than trusting the keyboard.
+          onChangeText={(t) => setAge(t.replace(/[^0-9]/g, '').slice(0, 2))} />
+        <TextInput
+          style={styles.input} placeholder="Location" placeholderTextColor={C.faint}
+          value={location} onChangeText={setLocation}
+          autoCapitalize="words" returnKeyType="next" />
+        <TextInput
+          style={styles.input} placeholder="Education" placeholderTextColor={C.faint}
+          value={education} onChangeText={setEducation}
+          autoCapitalize="words" returnKeyType="next" />
+        <TextInput
+          style={styles.input} placeholder="Career" placeholderTextColor={C.faint}
+          value={career} onChangeText={setCareer}
+          autoCapitalize="words" returnKeyType="next" />
         <TextInput
           style={[styles.input, { minHeight: 78, textAlignVertical: 'top' }]}
           placeholder="A few words about what you are looking for"
@@ -72,6 +89,7 @@ export default function Onboarding() {
           value={about}
           onChangeText={setAbout}
           multiline
+          maxLength={280}
         />
         <SectionLabel>Marriage timeline</SectionLabel>
         <View style={styles.chipRow}>
@@ -90,7 +108,10 @@ export default function Onboarding() {
             Required. Your profile is not visible to anyone until a wali is attached — this is not a
             setting that can be turned off.
           </Text>
-          <TextInput style={styles.input} placeholder="Wali's full name" placeholderTextColor={C.faint} value={waliName} onChangeText={setWaliName} />
+          <TextInput
+            style={styles.input} placeholder="Wali's full name" placeholderTextColor={C.faint}
+            value={waliName} onChangeText={setWaliName}
+            autoCapitalize="words" autoCorrect={false} returnKeyType="next" />
           <View style={styles.chipRow}>
             {['Father', 'Brother', 'Uncle', 'Grandfather'].map((rel) => (
               <Pressable key={rel} onPress={() => setWaliRel(rel)} style={[styles.chip, waliRel === rel && styles.chipOn]}>
@@ -99,7 +120,11 @@ export default function Onboarding() {
             ))}
           </View>
           <View style={{ height: 12 }} />
-          <TextInput style={styles.input} placeholder="His phone or email" placeholderTextColor={C.faint} value={waliContact} onChangeText={setWaliContact} autoCapitalize="none" />
+          <TextInput
+            style={styles.input} placeholder="His phone or email" placeholderTextColor={C.faint}
+            value={waliContact} onChangeText={setWaliContact}
+            autoCapitalize="none" autoCorrect={false} keyboardType="email-address"
+            returnKeyType="done" />
         </Card>
       )}
 
@@ -130,7 +155,7 @@ const styles = StyleSheet.create({
   roleBtnText: { fontFamily: F.bold, fontSize: 15, color: C.soft },
   chipRow: { flexDirection: 'row', flexWrap: 'wrap', gap: 8 },
   chip: {
-    paddingHorizontal: 13, paddingVertical: 8, borderRadius: S.pill,
+    paddingHorizontal: 15, paddingVertical: 11, borderRadius: S.pill,
     borderWidth: 1, borderColor: C.cardEdge,
   },
   chipOn: { backgroundColor: C.mint, borderColor: C.mint },

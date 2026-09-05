@@ -1,7 +1,7 @@
 import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
 import { useState } from 'react';
-import { Pressable, StyleSheet, Text, View } from 'react-native';
+import { Alert, Platform, Pressable, StyleSheet, Text, View } from 'react-native';
 import { useApp } from '../../src/store';
 import { C, F, S } from '../../src/theme';
 import { Card, PageTitle, Pill, Row, Screen, SectionLabel, Toggle } from '../../src/ui';
@@ -15,6 +15,19 @@ export default function Settings() {
   } = useApp();
 
   const me = actor.role === 'wali' ? undefined : profile(actor.id);
+
+  // Wipes every request, message and conversation — shared, and irreversible.
+  const confirmReset = () => {
+    const msg = 'This clears every request, conversation and message for everyone. It cannot be undone.';
+    if (Platform.OS === 'web') {
+      if (typeof window !== 'undefined' && window.confirm(`Reset demo data?\n\n${msg}`)) reset();
+      return;
+    }
+    Alert.alert('Reset demo data?', msg, [
+      { text: 'Cancel', style: 'cancel' },
+      { text: 'Reset', style: 'destructive', onPress: reset },
+    ]);
+  };
   const myWali = me?.waliId ? wali(me.waliId) : undefined;
 
   const [notifications, setNotifications] = useState(true);
@@ -105,7 +118,7 @@ export default function Settings() {
       <SectionLabel>Demo</SectionLabel>
       <Row icon="person-add-outline" label="Create a new profile" onPress={() => router.push('/onboarding')}
         right={<Ionicons name="chevron-forward" size={16} color={C.muted} />} />
-      <Row icon="refresh-outline" label="Reset demo data" onPress={reset}
+      <Row icon="refresh-outline" label="Reset demo data" onPress={confirmReset}
         right={<Ionicons name="chevron-forward" size={16} color={C.muted} />} />
 
       <Text style={styles.footer}>KHITBAH · HACKATHON BUILD</Text>

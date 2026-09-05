@@ -2,10 +2,11 @@ import { Ionicons } from '@expo/vector-icons';
 import { LinearGradient } from 'expo-linear-gradient';
 import React from 'react';
 import {
-  KeyboardAvoidingView, Platform, Pressable, ScrollView,
+  ActivityIndicator, KeyboardAvoidingView, Platform, Pressable, ScrollView,
   StyleSheet, Text, TextStyle, View, ViewStyle,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { useApp } from './store';
 import { C, F, S, eyebrow } from './theme';
 
 /** Full-bleed gradient ground every screen sits on. */
@@ -16,6 +17,9 @@ export function Screen({
   scroll?: boolean;
   edges?: ('top' | 'bottom')[];
 }) {
+  const { live, offline } = useApp();
+  const banner = live && offline ? <OfflineBanner /> : null;
+
   const body = scroll ? (
     <ScrollView
       contentContainerStyle={{ padding: S.pad, paddingBottom: 46 }}
@@ -35,6 +39,7 @@ export function Screen({
   return (
     <LinearGradient colors={[C.bgTop, C.bg]} locations={[0, 0.55]} style={{ flex: 1 }}>
       <SafeAreaView style={{ flex: 1 }} edges={edges}>
+        {banner}
         {/* iOS is handled by automaticallyAdjustKeyboardInsets above; Android
             needs the view itself to shrink. */}
         {Platform.OS === 'android' ? (
@@ -206,6 +211,27 @@ export function Toggle({ on, locked }: { on: boolean; locked?: boolean }) {
   );
 }
 
+/** Shown when the backend is configured but unreachable. */
+export function OfflineBanner() {
+  return (
+    <View style={styles.offline}>
+      <Ionicons name="cloud-offline-outline" size={15} color={C.gold} />
+      <Text style={styles.offlineText}>
+        Offline — showing the last data received. Changes will not sync.
+      </Text>
+    </View>
+  );
+}
+
+export function Loading({ text = 'Loading' }: { text?: string }) {
+  return (
+    <View style={styles.empty}>
+      <ActivityIndicator color={C.mint} />
+      <Text style={styles.emptyText}>{text}</Text>
+    </View>
+  );
+}
+
 export function Empty({ text, icon = 'leaf-outline' }: { text: string; icon?: keyof typeof Ionicons.glyphMap }) {
   return (
     <View style={styles.empty}>
@@ -260,6 +286,12 @@ const styles = StyleSheet.create({
   rowLabel: { flex: 1, color: C.cream, fontFamily: F.sans, fontSize: 16, marginLeft: 5 },
   track: { width: 46, height: 27, borderRadius: 14, padding: 3, justifyContent: 'center' },
   knob: { width: 21, height: 21, borderRadius: 11, backgroundColor: '#fff' },
+  offline: {
+    flexDirection: 'row', alignItems: 'center', gap: 9,
+    paddingHorizontal: S.pad, paddingVertical: 10,
+    borderBottomWidth: 1, borderBottomColor: C.goldEdge,
+  },
+  offlineText: { flex: 1, fontFamily: F.medium, fontSize: 12.5, color: C.gold, lineHeight: 18 },
   empty: { alignItems: 'center', paddingVertical: 34, gap: 11 },
   emptyText: { color: C.muted, textAlign: 'center', lineHeight: 21, fontFamily: F.sans, fontSize: 14 },
 });

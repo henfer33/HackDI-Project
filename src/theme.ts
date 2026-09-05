@@ -16,7 +16,7 @@ export const C = {
   ink: '#F1FBE2',
   soft: '#B6E6BE',
   muted: '#8FC79C',
-  faint: '#6BA37C',
+  faint: '#82BA92',
 
   // accents
   mint: '#7DE6A3',

@@ -4,12 +4,12 @@ import { useMemo, useState } from 'react';
 import { Pressable, StyleSheet, Text, TextInput, View } from 'react-native';
 import { useApp } from '../store';
 import { C, F, S } from '../theme';
-import { Card, Empty, PageTitle, Pill, SectionLabel } from '../ui';
+import { Card, Empty, Loading, PageTitle, Pill, SectionLabel } from '../ui';
 import { TIMELINES } from '../types';
 
 export default function Browse() {
   const router = useRouter();
-  const { profiles, requests, actor } = useApp();
+  const { profiles, requests, actor, loading } = useApp();
 
   const [q, setQ] = useState('');
   const [minAge, setMinAge] = useState('');
@@ -46,6 +46,9 @@ export default function Browse() {
           placeholderTextColor={C.faint}
           value={q}
           onChangeText={setQ}
+          autoCorrect={false}
+          returnKeyType="search"
+          clearButtonMode="while-editing"
         />
         <Pressable onPress={() => setOpen((v) => !v)} style={styles.filterBtn}>
           <Ionicons name="options-outline" size={16} color={C.mint} />
@@ -58,10 +61,12 @@ export default function Browse() {
           <View style={{ flexDirection: 'row', gap: 10, marginBottom: 6 }}>
             <TextInput
               style={[styles.input, { flex: 1 }]} placeholder="From" placeholderTextColor={C.faint}
-              keyboardType="number-pad" value={minAge} onChangeText={setMinAge} />
+              keyboardType="number-pad" value={minAge}
+              onChangeText={(t) => setMinAge(t.replace(/[^0-9]/g, '').slice(0, 2))} />
             <TextInput
               style={[styles.input, { flex: 1 }]} placeholder="To" placeholderTextColor={C.faint}
-              keyboardType="number-pad" value={maxAge} onChangeText={setMaxAge} />
+              keyboardType="number-pad" value={maxAge}
+              onChangeText={(t) => setMaxAge(t.replace(/[^0-9]/g, '').slice(0, 2))} />
           </View>
           <SectionLabel>Marriage timeline</SectionLabel>
           <View style={styles.chipRow}>
@@ -75,11 +80,16 @@ export default function Browse() {
         </Card>
       )}
 
-      <Text style={styles.count}>
-        {results.length} {results.length === 1 ? 'profile' : 'profiles'}
-      </Text>
+      {!loading && (
+        <Text style={styles.count}>
+          {results.length} {results.length === 1 ? 'profile' : 'profiles'}
+        </Text>
+      )}
 
-      {results.length === 0 && <Empty text="No profiles match these filters." icon="search-outline" />}
+      {loading && <Loading text="Loading profiles" />}
+      {!loading && results.length === 0 && (
+        <Empty text="No profiles match these filters." icon="search-outline" />
+      )}
 
       {results.map((p) => {
         const st = statusFor(p.id);
@@ -122,7 +132,7 @@ const styles = StyleSheet.create({
   },
   chipRow: { flexDirection: 'row', flexWrap: 'wrap', gap: 8 },
   chip: {
-    paddingHorizontal: 13, paddingVertical: 8, borderRadius: S.pill,
+    paddingHorizontal: 15, paddingVertical: 11, borderRadius: S.pill,
     borderWidth: 1, borderColor: C.cardEdge,
   },
   chipOn: { backgroundColor: C.mint, borderColor: C.mint },

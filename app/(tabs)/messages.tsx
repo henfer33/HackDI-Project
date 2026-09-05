@@ -2,7 +2,7 @@ import { useRouter } from 'expo-router';
 import { StyleSheet, Text, View } from 'react-native';
 import { useApp } from '../../src/store';
 import { C, F } from '../../src/theme';
-import { Card, Empty, PageTitle, Pill, Screen, SectionLabel } from '../../src/ui';
+import { Card, Empty, Loading, PageTitle, Pill, Screen, SectionLabel } from '../../src/ui';
 
 /**
  * Conversations for whoever is viewing. The suitor and the woman each reach
@@ -10,7 +10,7 @@ import { Card, Empty, PageTitle, Pill, Screen, SectionLabel } from '../../src/ui
  */
 export default function Messages() {
   const router = useRouter();
-  const { actor, threadsFor, counterpart, lastMessage, wali, meetFor, profile } = useApp();
+  const { actor, threadsFor, counterpart, lastMessage, wali, meetFor, profile, loading } = useApp();
 
   const threads = threadsFor(actor);
   const isWali = actor.role === 'wali';
@@ -22,7 +22,9 @@ export default function Messages() {
         subtitle={isWali ? 'You can read every one of these.' : 'Your wali is present in every one.'}
       />
 
-      {threads.length === 0 && (
+      {loading && <Loading text="Loading conversations" />}
+
+      {!loading && threads.length === 0 && (
         <Empty
           icon="chatbubbles-outline"
           text={
@@ -33,7 +35,7 @@ export default function Messages() {
         />
       )}
 
-      {threads.length > 0 && <SectionLabel>{threads.length} open</SectionLabel>}
+      {!loading && threads.length > 0 && <SectionLabel>{threads.length} open</SectionLabel>}
 
       {threads.map((r) => {
         const other = counterpart(r, actor);

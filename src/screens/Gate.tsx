@@ -18,9 +18,13 @@ export function GateTrail({ status, waliName, herName }: {
     status === 'declined_wali' ? 0 : status === 'declined_woman' ? 1 : -1;
   const reached = ORDER.indexOf(status);
 
+  // "You reviews" — the subject is sometimes the viewer, so the verb has to agree.
+  const verb = (subject: string, third: string, first: string) =>
+    subject === 'You' ? first : third;
+
   const steps = [
-    { label: `${waliName} reviews`, icon: 'shield-checkmark' as const },
-    { label: `${herName} decides`, icon: 'heart-outline' as const },
+    { label: `${waliName} ${verb(waliName, 'reviews', 'review')}`, icon: 'shield-checkmark' as const },
+    { label: `${herName} ${verb(herName, 'decides', 'decide')}`, icon: 'heart-outline' as const },
     { label: 'Chat opens', icon: 'chatbubbles-outline' as const },
   ];
 

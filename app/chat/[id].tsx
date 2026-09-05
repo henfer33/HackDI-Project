@@ -37,6 +37,11 @@ export default function Chat() {
   const readOnly = isWali && !waliMayWrite;
   const thread = messages.filter((m) => m.requestId === requestId);
   const meet = meetFor(requestId);
+  // Offering to meet before either of them has spoken reads badly. Both have to
+  // have said something first.
+  const bothSpoke =
+    thread.some((m) => !m.system && m.senderId === r.manId) &&
+    thread.some((m) => !m.system && m.senderId === r.womanId);
   const meetDone = meet?.confirmedBy;
   const canConfirm = meet && !meet.confirmedBy && meet.initiatedBy !== actor.id && !isWali;
 
@@ -86,6 +91,12 @@ export default function Chat() {
             </Text>
           </View>
 
+          {thread.length === 0 && (
+            <Text style={styles.emptyThread}>
+              No messages yet. {isWali ? 'You will see them here as they are sent.' : 'Say salaam.'}
+            </Text>
+          )}
+
           {thread.map((m) => {
             if (m.system) {
               return (
@@ -117,7 +128,7 @@ export default function Chat() {
           )}
         </ScrollView>
 
-        {!meetDone && !isWali && (
+        {!meetDone && !isWali && bothSpoke && (
           <View style={{ paddingHorizontal: S.pad, paddingBottom: 6 }}>
             {!meet && (
               <Pressable onPress={() => proposeMeet(requestId, actor.id)}>
@@ -152,6 +163,10 @@ export default function Chat() {
                 value={draft}
                 onChangeText={setDraft}
                 multiline
+                maxLength={1000}
+                autoCapitalize="sentences"
+                // Keeps focus so a reply can follow straight on.
+                blurOnSubmit={false}
               />
               <Pressable onPress={send} disabled={!draft.trim()} style={[styles.send, !draft.trim() && { opacity: 0.3 }]}>
                 <Ionicons name="arrow-up" size={19} color="#14301F" />
@@ -177,6 +192,10 @@ const styles = StyleSheet.create({
     borderWidth: 1, borderColor: C.cardEdge, borderRadius: 14, padding: 12, marginBottom: 18,
   },
   adabText: { flex: 1, fontFamily: F.sans, fontSize: 12.5, color: C.soft, lineHeight: 18 },
+  emptyThread: {
+    fontFamily: F.sans, fontSize: 14, color: C.muted,
+    textAlign: 'center', paddingVertical: 26, lineHeight: 20,
+  },
   wrap: { marginBottom: 13, maxWidth: '84%' },
   left: { alignSelf: 'flex-start' },
   right: { alignSelf: 'flex-end' },

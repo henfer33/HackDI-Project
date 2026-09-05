@@ -61,6 +61,8 @@ export default function Person() {
               value={note}
               onChangeText={setNote}
               multiline
+              maxLength={280}
+              autoCapitalize="sentences"
             />
             <Button
               title="Send to wali"
