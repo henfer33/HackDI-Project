@@ -88,7 +88,7 @@ export default function Me() {
 }
 
 const styles = StyleSheet.create({
-  note: { fontSize: 13, color: C.muted, lineHeight: 19, marginTop: 10 },
+  note: { fontFamily: F.sans, fontSize: 13, color: C.muted, lineHeight: 19, marginTop: 10 },
   waliName: { fontFamily: F.display, fontSize: 22, color: C.cream },
-  waliRel: { fontSize: 14, color: C.gold, marginTop: 4 },
+  waliRel: { fontFamily: F.sans, fontSize: 14, color: C.gold, marginTop: 4 },
 });

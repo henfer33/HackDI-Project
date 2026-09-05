@@ -1,7 +1,7 @@
 import { Ionicons } from '@expo/vector-icons';
 import { Tabs } from 'expo-router';
 import { useApp } from '../../src/store';
-import { C } from '../../src/theme';
+import { C, F } from '../../src/theme';
 
 export default function TabsLayout() {
   const { actor, inboxFor, threadsFor } = useApp();
@@ -26,14 +26,14 @@ export default function TabsLayout() {
           height: 86,
           paddingTop: 9,
         },
-        tabBarLabelStyle: { fontSize: 11, fontWeight: '600', marginTop: 2 },
+        tabBarLabelStyle: { fontSize: 11, fontFamily: F.semi, marginTop: 2 },
       }}>
       <Tabs.Screen
         name="index"
         options={{
           title: homeLabel,
           tabBarBadge: inbox || undefined,
-          tabBarBadgeStyle: { backgroundColor: C.gold, color: '#2A1F00', fontWeight: '700' },
+          tabBarBadgeStyle: { backgroundColor: C.gold, color: '#14301F', fontFamily: F.bold },
           tabBarIcon: ({ color, size }) => (
             <Ionicons name={homeIcon as any} size={size - 2} color={color} />
           ),
@@ -44,7 +44,7 @@ export default function TabsLayout() {
         options={{
           title: 'Messages',
           tabBarBadge: threads || undefined,
-          tabBarBadgeStyle: { backgroundColor: C.mint, color: '#052E16', fontWeight: '700' },
+          tabBarBadgeStyle: { backgroundColor: C.mint, color: '#14301F', fontFamily: F.bold },
           tabBarIcon: ({ color, size }) => (
             <Ionicons name="chatbubbles-outline" size={size - 2} color={color} />
           ),

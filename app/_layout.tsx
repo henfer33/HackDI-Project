@@ -1,6 +1,10 @@
 import {
-  PlayfairDisplay_400Regular, PlayfairDisplay_700Bold, useFonts,
-} from '@expo-google-fonts/playfair-display';
+  IBMPlexSans_400Regular, IBMPlexSans_500Medium,
+  IBMPlexSans_600SemiBold, IBMPlexSans_700Bold, useFonts,
+} from '@expo-google-fonts/ibm-plex-sans';
+import {
+  IBMPlexSerif_600SemiBold, IBMPlexSerif_700Bold,
+} from '@expo-google-fonts/ibm-plex-serif';
 import { Stack } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import { View } from 'react-native';
@@ -8,7 +12,11 @@ import { AppProvider } from '../src/store';
 import { C } from '../src/theme';
 
 export default function RootLayout() {
-  const [ready] = useFonts({ PlayfairDisplay_400Regular, PlayfairDisplay_700Bold });
+  const [ready] = useFonts({
+    IBMPlexSans_400Regular, IBMPlexSans_500Medium,
+    IBMPlexSans_600SemiBold, IBMPlexSans_700Bold,
+    IBMPlexSerif_600SemiBold, IBMPlexSerif_700Bold,
+  });
   if (!ready) return <View style={{ flex: 1, backgroundColor: C.bg }} />;
 
   return (

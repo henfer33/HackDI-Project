@@ -80,6 +80,6 @@ const styles = StyleSheet.create({
   },
   avatarText: { fontFamily: F.display, fontSize: 21, color: C.mint },
   name: { fontFamily: F.display, fontSize: 21, color: C.cream },
-  preview: { fontSize: 13.5, color: C.muted, marginTop: 3 },
+  preview: { fontFamily: F.sans, fontSize: 13.5, color: C.muted, marginTop: 3 },
   pills: { flexDirection: 'row', gap: 8, marginTop: 14, flexWrap: 'wrap' },
 });

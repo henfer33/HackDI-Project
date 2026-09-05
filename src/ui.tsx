@@ -80,9 +80,9 @@ export function Card({
 }) {
   const toned =
     tone === 'gold'
-      ? { backgroundColor: C.goldDim, borderColor: 'rgba(242,194,48,0.4)' }
+      ? { backgroundColor: 'transparent', borderColor: C.goldEdge }
       : tone === 'mint'
-        ? { backgroundColor: C.mintDim, borderColor: 'rgba(74,222,128,0.4)' }
+        ? { backgroundColor: 'transparent', borderColor: C.mintEdge }
         : null;
   const body = <View style={[styles.card, toned, style]}>{children}</View>;
   if (!onPress) return body;
@@ -103,8 +103,8 @@ export function Button({
   icon?: keyof typeof Ionicons.glyphMap;
 }) {
   const map = {
-    primary: { bg: C.mint, fg: '#052E16', border: C.mint },
-    gold: { bg: C.gold, fg: '#2A1F00', border: C.gold },
+    primary: { bg: C.mint, fg: '#14301F', border: C.mint },
+    gold: { bg: C.gold, fg: '#14301F', border: C.gold },
     ghost: { bg: 'transparent', fg: C.soft, border: C.cardEdge },
     danger: { bg: C.dangerDim, fg: C.danger, border: 'rgba(241,132,111,0.4)' },
   }[tone];
@@ -131,13 +131,13 @@ export function Pill({
   icon?: keyof typeof Ionicons.glyphMap;
 }) {
   const map = {
-    mint: { bg: C.mintDim, fg: C.mint },
-    gold: { bg: C.goldDim, fg: C.gold },
-    danger: { bg: C.dangerDim, fg: C.danger },
-    muted: { bg: 'rgba(255,255,255,0.07)', fg: C.muted },
+    mint: { fg: C.mint, edge: C.mintEdge },
+    gold: { fg: C.gold, edge: C.goldEdge },
+    danger: { fg: C.danger, edge: C.dangerEdge },
+    muted: { fg: C.muted, edge: C.cardEdge },
   }[tone];
   return (
-    <View style={[styles.pill, { backgroundColor: map.bg }]}>
+    <View style={[styles.pill, { borderColor: map.edge }]}>
       {icon && <Ionicons name={icon} size={11} color={map.fg} />}
       <Text style={[styles.pillText, { color: map.fg }]}>{label}</Text>
     </View>
@@ -204,7 +204,7 @@ export function Divider() {
 }
 
 const displayBase: TextStyle = {
-  fontFamily: F.display,
+  fontFamily: F.displayBold,
   color: C.cream,
   fontSize: 46,
   textAlign: 'center',
@@ -215,7 +215,7 @@ const styles = StyleSheet.create({
   browRow: { flexDirection: 'row', alignItems: 'center', gap: 7, marginBottom: 8 },
   brow: { ...eyebrow, color: C.gold },
   display: displayBase,
-  displaySub: { color: C.soft, fontSize: 15, marginTop: 6, textAlign: 'center' },
+  displaySub: { color: C.soft, fontFamily: F.sans, fontSize: 15, marginTop: 6, textAlign: 'center' },
   section: { ...eyebrow, color: C.soft, marginBottom: 13, marginTop: 6 },
   card: {
     backgroundColor: C.card,
@@ -229,23 +229,24 @@ const styles = StyleSheet.create({
     flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 8,
     paddingVertical: 15, paddingHorizontal: 20, borderRadius: S.pill, borderWidth: 1,
   },
-  btnText: { fontSize: 15, fontWeight: '700' },
+  btnText: { fontFamily: F.bold, fontSize: 15 },
   pill: {
     flexDirection: 'row', alignItems: 'center', gap: 5,
-    paddingHorizontal: 11, paddingVertical: 6, borderRadius: S.pill, alignSelf: 'flex-start',
+    paddingHorizontal: 11, paddingVertical: 6, borderRadius: S.pill,
+    alignSelf: 'flex-start', borderWidth: 1, backgroundColor: 'transparent',
   },
-  pillText: { fontSize: 11.5, fontWeight: '700', letterSpacing: 0.3 },
-  fieldLabel: { ...eyebrow, fontSize: 10, color: C.faint, marginBottom: 3 },
-  fieldValue: { fontSize: 15, color: C.cream, lineHeight: 21 },
+  pillText: { fontFamily: F.bold, fontSize: 11.5, letterSpacing: 0.3 },
+  fieldLabel: { ...eyebrow, fontFamily: F.sans, fontSize: 10, color: C.faint, marginBottom: 3 },
+  fieldValue: { fontFamily: F.sans, fontSize: 15, color: C.cream, lineHeight: 21 },
   row: {
     flexDirection: 'row', alignItems: 'center',
     backgroundColor: C.card, borderWidth: 1, borderColor: C.cardEdge,
     borderRadius: S.pill, paddingVertical: 14, paddingHorizontal: 15, marginBottom: 11,
   },
   rowIcon: { width: 30, alignItems: 'center' },
-  rowLabel: { flex: 1, color: C.cream, fontSize: 16, marginLeft: 5 },
+  rowLabel: { flex: 1, color: C.cream, fontFamily: F.sans, fontSize: 16, marginLeft: 5 },
   track: { width: 46, height: 27, borderRadius: 14, padding: 3, justifyContent: 'center' },
   knob: { width: 21, height: 21, borderRadius: 11, backgroundColor: '#fff' },
   empty: { alignItems: 'center', paddingVertical: 34, gap: 11 },
-  emptyText: { color: C.muted, textAlign: 'center', lineHeight: 21, fontSize: 14 },
+  emptyText: { color: C.muted, textAlign: 'center', lineHeight: 21, fontFamily: F.sans, fontSize: 14 },
 });

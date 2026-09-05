@@ -1,43 +1,50 @@
 /**
- * Dark "jungle" palette: deep forest ground, cream serif display type,
- * a single mint accent for action and gold reserved for the wali.
+ * Lighter forest palette. Grounds are raised well above black so the app reads
+ * green rather than near-black, with IBM Plex throughout.
  */
 export const C = {
-  // grounds
-  bg: '#06180F',
-  bgTop: '#0B2A1E',
-  sheet: '#0E3323',
-  card: 'rgba(255,255,255,0.045)',
-  cardEdge: 'rgba(255,255,255,0.09)',
-  raised: '#12402C',
+  // grounds — lighter than the first pass
+  bg: '#12352A',
+  bgTop: '#1B4A38',
+  sheet: '#1E5240',
+  card: 'rgba(255,255,255,0.05)',
+  cardEdge: 'rgba(255,255,255,0.14)',
+  raised: '#24614A',
 
   // type
-  cream: '#EAF7CE',
-  ink: '#EAF7CE',
-  soft: '#9BD3A6',
-  muted: '#6FA37E',
-  faint: '#4A7659',
+  cream: '#F1FBE2',
+  ink: '#F1FBE2',
+  soft: '#B6E6BE',
+  muted: '#8FC79C',
+  faint: '#6BA37C',
 
   // accents
-  mint: '#4ADE80',
-  mintDim: 'rgba(74,222,128,0.14)',
-  gold: '#F2C230',
-  goldDim: 'rgba(242,194,48,0.14)',
-  danger: '#F1846F',
-  dangerDim: 'rgba(241,132,111,0.14)',
+  mint: '#7DE6A3',
+  mintDim: 'rgba(125,230,163,0.16)',
+  mintEdge: 'rgba(125,230,163,0.55)',
+  gold: '#F4CE5E',
+  goldDim: 'rgba(244,206,94,0.14)',
+  goldEdge: 'rgba(244,206,94,0.55)',
+  danger: '#F79B87',
+  dangerDim: 'rgba(247,155,135,0.14)',
+  dangerEdge: 'rgba(247,155,135,0.55)',
 };
 
 export const S = { radius: 22, pill: 999, pad: 22, gap: 14 };
 
-/** Playfair for display, system sans for everything else. */
+/** IBM Plex. Serif for display headings, Sans for everything else. */
 export const F = {
-  display: 'PlayfairDisplay_700Bold',
-  displayReg: 'PlayfairDisplay_400Regular',
+  display: 'IBMPlexSerif_600SemiBold',
+  displayBold: 'IBMPlexSerif_700Bold',
+  sans: 'IBMPlexSans_400Regular',
+  medium: 'IBMPlexSans_500Medium',
+  semi: 'IBMPlexSans_600SemiBold',
+  bold: 'IBMPlexSans_700Bold',
 };
 
 export const eyebrow = {
   fontSize: 12,
   letterSpacing: 2.2,
-  fontWeight: '700' as const,
+  fontFamily: F.semi,
   textTransform: 'uppercase' as const,
 };

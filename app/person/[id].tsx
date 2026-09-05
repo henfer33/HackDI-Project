@@ -95,13 +95,13 @@ export default function Person() {
 }
 
 const styles = StyleSheet.create({
-  help: { fontSize: 13.5, color: C.muted, lineHeight: 20, marginBottom: 14 },
+  help: { fontFamily: F.sans, fontSize: 13.5, color: C.muted, lineHeight: 20, marginBottom: 14 },
   input: {
     borderWidth: 1, borderColor: C.cardEdge, borderRadius: 16, padding: 14,
-    fontSize: 15, color: C.cream, minHeight: 88, textAlignVertical: 'top',
+    fontFamily: F.sans, fontSize: 15, color: C.cream, minHeight: 88, textAlignVertical: 'top',
     marginBottom: 16, backgroundColor: 'rgba(0,0,0,0.22)',
   },
   waliName: { fontFamily: F.display, fontSize: 23, color: C.cream, marginTop: 12 },
-  waliRel: { fontSize: 13.5, color: C.gold, marginTop: 4, lineHeight: 20 },
-  status: { fontSize: 15, color: C.cream, lineHeight: 22, marginTop: 18, marginBottom: 16 },
+  waliRel: { fontFamily: F.sans, fontSize: 13.5, color: C.gold, marginTop: 4, lineHeight: 20 },
+  status: { fontFamily: F.sans, fontSize: 15, color: C.cream, lineHeight: 22, marginTop: 18, marginBottom: 16 },
 });

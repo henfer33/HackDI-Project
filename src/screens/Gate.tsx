@@ -1,6 +1,6 @@
 import { Ionicons } from '@expo/vector-icons';
 import { StyleSheet, Text, View } from 'react-native';
-import { C } from '../theme';
+import { C, F } from '../theme';
 import { RequestStatus } from '../types';
 
 const ORDER: RequestStatus[] = ['pending_wali', 'pending_woman', 'accepted'];
@@ -52,6 +52,6 @@ const styles = StyleSheet.create({
     width: 28, height: 28, borderRadius: 14, borderWidth: 1.5,
     alignItems: 'center', justifyContent: 'center', marginBottom: 7,
   },
-  label: { fontSize: 10.5, textAlign: 'center', lineHeight: 14, paddingHorizontal: 2 },
+  label: { fontFamily: F.sans, fontSize: 10.5, textAlign: 'center', lineHeight: 14, paddingHorizontal: 2 },
   bar: { position: 'absolute', height: 1.5, top: 13.5, left: '62%', right: '-38%' },
 });

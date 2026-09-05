@@ -85,8 +85,8 @@ export default function HerRequests() {
 }
 
 const styles = StyleSheet.create({
-  intro: { fontSize: 14, color: C.cream, lineHeight: 21, marginTop: 12 },
+  intro: { fontFamily: F.sans, fontSize: 14, color: C.cream, lineHeight: 21, marginTop: 12 },
   name: { fontFamily: F.display, fontSize: 24, color: C.cream },
-  sub: { fontSize: 14, color: C.muted, marginTop: 4 },
-  muted: { fontSize: 14, color: C.muted, lineHeight: 21 },
+  sub: { fontFamily: F.sans, fontSize: 14, color: C.muted, marginTop: 4 },
+  muted: { fontFamily: F.sans, fontSize: 14, color: C.muted, lineHeight: 21 },
 });

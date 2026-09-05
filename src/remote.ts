@@ -25,8 +25,9 @@ const toMeet = (r: any): MeetIntent => ({
 export async function fetchAll() {
   if (!supabase) throw new Error('no client');
   const [p, w, r, m, k] = await Promise.all([
-    supabase.from('profiles').select('*'),
-    supabase.from('walis').select('*'),
+    // Ordered so the list never reshuffles when a row is updated mid-demo.
+    supabase.from('profiles').select('*').order('id'),
+    supabase.from('walis').select('*').order('id'),
     supabase.from('requests').select('*').order('created_at'),
     supabase.from('messages').select('*').order('at'),
     supabase.from('meets').select('*'),

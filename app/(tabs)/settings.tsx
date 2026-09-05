@@ -88,7 +88,7 @@ export default function Settings() {
           {notifyOptions.map((o) => (
             <Pressable key={o.key} onPress={() => setWaliNotify(o.key)}
               style={[styles.segBtn, waliNotify === o.key && styles.segBtnOn]}>
-              <Text style={[styles.segText, waliNotify === o.key && { color: '#052E16', fontWeight: '700' }]}>
+              <Text style={[styles.segText, waliNotify === o.key && { color: '#14301F', fontFamily: F.bold }]}>
                 {o.label}
               </Text>
             </Pressable>
@@ -127,17 +127,17 @@ const styles = StyleSheet.create({
     width: 38, height: 38, borderRadius: 19, backgroundColor: 'rgba(255,255,255,0.06)',
     alignItems: 'center', justifyContent: 'center',
   },
-  roleName: { fontSize: 16.5, color: C.cream, fontWeight: '600' },
-  roleSub: { fontSize: 12.5, color: C.muted, marginTop: 2 },
-  lockNote: { fontSize: 12.5, color: C.muted, lineHeight: 19, marginTop: 4, marginBottom: 8, paddingHorizontal: 4 },
-  help: { fontSize: 13.5, color: C.muted, lineHeight: 20, marginBottom: 14 },
+  roleName: { fontFamily: F.semi, fontSize: 16.5, color: C.cream },
+  roleSub: { fontFamily: F.sans, fontSize: 12.5, color: C.muted, marginTop: 2 },
+  lockNote: { fontFamily: F.sans, fontSize: 12.5, color: C.muted, lineHeight: 19, marginTop: 4, marginBottom: 8, paddingHorizontal: 4 },
+  help: { fontFamily: F.sans, fontSize: 13.5, color: C.muted, lineHeight: 20, marginBottom: 14 },
   segment: {
     flexDirection: 'row', backgroundColor: 'rgba(0,0,0,0.25)',
     borderRadius: S.pill, padding: 4, gap: 4,
   },
   segBtn: { flex: 1, paddingVertical: 10, borderRadius: S.pill, alignItems: 'center' },
   segBtnOn: { backgroundColor: C.mint },
-  segText: { fontSize: 14, color: C.soft },
+  segText: { fontFamily: F.sans, fontSize: 14, color: C.soft },
   footer: { fontFamily: F.display, fontSize: 13, color: C.faint, textAlign: 'center', marginTop: 26, letterSpacing: 2 },
-  footerSub: { fontSize: 12, color: C.faint, textAlign: 'center', marginTop: 8, lineHeight: 18, paddingHorizontal: 16 },
+  footerSub: { fontFamily: F.sans, fontSize: 12, color: C.faint, textAlign: 'center', marginTop: 8, lineHeight: 18, paddingHorizontal: 16 },
 });

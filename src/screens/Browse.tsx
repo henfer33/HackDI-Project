@@ -68,7 +68,7 @@ export default function Browse() {
             {TIMELINES.map((t) => (
               <Pressable key={t} onPress={() => setTimeline(timeline === t ? null : t)}
                 style={[styles.chip, timeline === t && styles.chipOn]}>
-                <Text style={[styles.chipText, timeline === t && { color: '#052E16' }]}>{t}</Text>
+                <Text style={[styles.chipText, timeline === t && { color: '#14301F' }]}>{t}</Text>
               </Pressable>
             ))}
           </View>
@@ -114,11 +114,11 @@ const styles = StyleSheet.create({
     backgroundColor: C.card, borderWidth: 1, borderColor: C.cardEdge,
     borderRadius: S.pill, paddingHorizontal: 16, paddingVertical: 4, marginBottom: 14,
   },
-  search: { flex: 1, color: C.cream, fontSize: 15, paddingVertical: 12 },
+  search: { flex: 1, color: C.cream, fontFamily: F.sans, fontSize: 15, paddingVertical: 12 },
   filterBtn: { padding: 6 },
   input: {
     borderWidth: 1, borderColor: C.cardEdge, borderRadius: 14, paddingHorizontal: 14,
-    paddingVertical: 11, fontSize: 15, color: C.cream, backgroundColor: 'rgba(0,0,0,0.2)',
+    paddingVertical: 11, fontFamily: F.sans, fontSize: 15, color: C.cream, backgroundColor: 'rgba(0,0,0,0.2)',
   },
   chipRow: { flexDirection: 'row', flexWrap: 'wrap', gap: 8 },
   chip: {
@@ -126,10 +126,10 @@ const styles = StyleSheet.create({
     borderWidth: 1, borderColor: C.cardEdge,
   },
   chipOn: { backgroundColor: C.mint, borderColor: C.mint },
-  chipText: { fontSize: 13, color: C.soft },
-  count: { color: C.muted, fontSize: 13, marginBottom: 12, marginLeft: 4 },
+  chipText: { fontFamily: F.sans, fontSize: 13, color: C.soft },
+  count: { color: C.muted, fontFamily: F.sans, fontSize: 13, marginBottom: 12, marginLeft: 4 },
   name: { flex: 1, fontFamily: F.display, fontSize: 24, color: C.cream },
-  age: { fontSize: 17, color: C.soft },
-  meta: { fontSize: 14, color: C.muted, marginTop: 4 },
+  age: { fontFamily: F.sans, fontSize: 17, color: C.soft },
+  meta: { fontFamily: F.sans, fontSize: 14, color: C.muted, marginTop: 4 },
   pills: { flexDirection: 'row', flexWrap: 'wrap', gap: 8, marginTop: 14 },
 });

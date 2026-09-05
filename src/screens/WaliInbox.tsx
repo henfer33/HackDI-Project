@@ -104,10 +104,10 @@ function Stat({ n, label }: { n: number; label: string }) {
 }
 
 const styles = StyleSheet.create({
-  intro: { fontSize: 14, color: C.cream, lineHeight: 21, marginTop: 12 },
+  intro: { fontFamily: F.sans, fontSize: 14, color: C.cream, lineHeight: 21, marginTop: 12 },
   stats: { flexDirection: 'row', marginTop: 18, gap: 8 },
   statN: { fontFamily: F.display, fontSize: 28, color: C.gold },
-  statL: { fontSize: 11, color: C.muted, marginTop: 2 },
+  statL: { fontFamily: F.sans, fontSize: 11, color: C.muted, marginTop: 2 },
   name: { fontFamily: F.display, fontSize: 24, color: C.cream },
-  sub: { fontSize: 14, color: C.muted, marginTop: 4 },
+  sub: { fontFamily: F.sans, fontSize: 14, color: C.muted, marginTop: 4 },
 });

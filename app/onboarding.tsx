@@ -2,7 +2,7 @@ import { useRouter } from 'expo-router';
 import { useState } from 'react';
 import { Pressable, StyleSheet, Text, TextInput, View } from 'react-native';
 import { useApp } from '../src/store';
-import { C, S } from '../src/theme';
+import { C, F, S } from '../src/theme';
 import { Button, Card, PageTitle, Screen, SectionLabel } from '../src/ui';
 import { TIMELINES, Timeline } from '../src/types';
 
@@ -50,7 +50,7 @@ export default function Onboarding() {
               key={r}
               onPress={() => setRole(r)}
               style={[styles.roleBtn, role === r && styles.roleBtnOn]}>
-              <Text style={[styles.roleBtnText, role === r && { color: '#052E16' }]}>
+              <Text style={[styles.roleBtnText, role === r && { color: '#14301F' }]}>
                 {r === 'man' ? 'Man' : 'Woman'}
               </Text>
             </Pressable>
@@ -77,7 +77,7 @@ export default function Onboarding() {
         <View style={styles.chipRow}>
           {TIMELINES.map((t) => (
             <Pressable key={t} onPress={() => setTimeline(t)} style={[styles.chip, timeline === t && styles.chipOn]}>
-              <Text style={[styles.chipText, timeline === t && { color: '#052E16' }]}>{t}</Text>
+              <Text style={[styles.chipText, timeline === t && { color: '#14301F' }]}>{t}</Text>
             </Pressable>
           ))}
         </View>
@@ -94,7 +94,7 @@ export default function Onboarding() {
           <View style={styles.chipRow}>
             {['Father', 'Brother', 'Uncle', 'Grandfather'].map((rel) => (
               <Pressable key={rel} onPress={() => setWaliRel(rel)} style={[styles.chip, waliRel === rel && styles.chipOn]}>
-                <Text style={[styles.chipText, waliRel === rel && { color: '#052E16' }]}>{rel}</Text>
+                <Text style={[styles.chipText, waliRel === rel && { color: '#14301F' }]}>{rel}</Text>
               </Pressable>
             ))}
           </View>
@@ -116,10 +116,10 @@ export default function Onboarding() {
 }
 
 const styles = StyleSheet.create({
-  help: { fontSize: 13, color: C.cream, lineHeight: 20, marginBottom: 14 },
+  help: { fontFamily: F.sans, fontSize: 13, color: C.cream, lineHeight: 20, marginBottom: 14 },
   input: {
     borderWidth: 1, borderColor: C.cardEdge, borderRadius: 16, paddingHorizontal: 15,
-    paddingVertical: 13, fontSize: 15, color: C.cream, marginBottom: 11,
+    paddingVertical: 13, fontFamily: F.sans, fontSize: 15, color: C.cream, marginBottom: 11,
     backgroundColor: 'rgba(0,0,0,0.22)',
   },
   roleBtn: {
@@ -127,13 +127,13 @@ const styles = StyleSheet.create({
     borderColor: C.cardEdge, alignItems: 'center',
   },
   roleBtnOn: { backgroundColor: C.mint, borderColor: C.mint },
-  roleBtnText: { fontSize: 15, fontWeight: '700', color: C.soft },
+  roleBtnText: { fontFamily: F.bold, fontSize: 15, color: C.soft },
   chipRow: { flexDirection: 'row', flexWrap: 'wrap', gap: 8 },
   chip: {
     paddingHorizontal: 13, paddingVertical: 8, borderRadius: S.pill,
     borderWidth: 1, borderColor: C.cardEdge,
   },
   chipOn: { backgroundColor: C.mint, borderColor: C.mint },
-  chipText: { fontSize: 13, color: C.soft },
-  blocked: { textAlign: 'center', color: C.muted, fontSize: 13, marginTop: 14 },
+  chipText: { fontFamily: F.sans, fontSize: 13, color: C.soft },
+  blocked: { textAlign: 'center', color: C.muted, fontFamily: F.sans, fontSize: 13, marginTop: 14 },
 });

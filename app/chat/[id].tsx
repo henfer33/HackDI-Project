@@ -87,7 +87,7 @@ export default function Chat() {
               <View key={m.id} style={[styles.wrap, mine ? styles.right : styles.left]}>
                 {!mine && <Text style={styles.sender}>{nameFor(m.senderId)}</Text>}
                 <View style={[styles.bubble, mine ? styles.mine : styles.other]}>
-                  <Text style={[styles.msg, mine && { color: '#052E16' }]}>{m.text}</Text>
+                  <Text style={[styles.msg, mine && { color: '#14301F' }]}>{m.text}</Text>
                 </View>
               </View>
             );
@@ -137,7 +137,7 @@ export default function Chat() {
                 multiline
               />
               <Pressable onPress={send} disabled={!draft.trim()} style={[styles.send, !draft.trim() && { opacity: 0.3 }]}>
-                <Ionicons name="arrow-up" size={19} color="#052E16" />
+                <Ionicons name="arrow-up" size={19} color="#14301F" />
               </Pressable>
             </View>
           )}
@@ -154,37 +154,37 @@ const styles = StyleSheet.create({
     paddingHorizontal: S.pad, paddingVertical: 12,
     backgroundColor: C.goldDim, borderBottomWidth: 1, borderBottomColor: 'rgba(242,194,48,0.25)',
   },
-  bannerText: { flex: 1, fontSize: 13.5, color: C.cream, fontWeight: '600' },
+  bannerText: { flex: 1, fontFamily: F.semi, fontSize: 13.5, color: C.cream },
   adab: {
     flexDirection: 'row', alignItems: 'center', gap: 9,
     backgroundColor: C.mintDim, borderRadius: 14, padding: 12, marginBottom: 18,
   },
-  adabText: { flex: 1, fontSize: 12.5, color: C.soft, lineHeight: 18 },
+  adabText: { flex: 1, fontFamily: F.sans, fontSize: 12.5, color: C.soft, lineHeight: 18 },
   wrap: { marginBottom: 13, maxWidth: '84%' },
   left: { alignSelf: 'flex-start' },
   right: { alignSelf: 'flex-end' },
-  sender: { fontSize: 11.5, color: C.muted, marginBottom: 5, marginLeft: 6 },
+  sender: { fontFamily: F.sans, fontSize: 11.5, color: C.muted, marginBottom: 5, marginLeft: 6 },
   bubble: { borderRadius: 20, paddingHorizontal: 15, paddingVertical: 11 },
   mine: { backgroundColor: C.mint, borderBottomRightRadius: 6 },
   other: { backgroundColor: C.card, borderWidth: 1, borderColor: C.cardEdge, borderBottomLeftRadius: 6 },
-  msg: { fontSize: 15, color: C.cream, lineHeight: 21 },
+  msg: { fontFamily: F.sans, fontSize: 15, color: C.cream, lineHeight: 21 },
   system: {
     backgroundColor: 'rgba(255,255,255,0.05)', borderRadius: 14, padding: 13,
     marginBottom: 16, alignSelf: 'center', maxWidth: '94%',
   },
-  systemText: { fontSize: 12.5, color: C.soft, textAlign: 'center', lineHeight: 19 },
+  systemText: { fontFamily: F.sans, fontSize: 12.5, color: C.soft, textAlign: 'center', lineHeight: 19 },
   handoff: {
     backgroundColor: C.goldDim, borderWidth: 1, borderColor: 'rgba(242,194,48,0.4)',
     borderRadius: S.radius, padding: 20, marginTop: 10, alignItems: 'center', gap: 4,
   },
   handoffTitle: { fontFamily: F.display, fontSize: 21, color: C.gold, marginTop: 6 },
-  handoffText: { fontSize: 13.5, color: C.cream, lineHeight: 21, textAlign: 'center', marginTop: 6 },
-  meetLink: { color: C.mint, fontSize: 14, fontWeight: '700', textAlign: 'center', paddingVertical: 12 },
-  meetPending: { color: C.muted, fontSize: 13, textAlign: 'center', paddingVertical: 12 },
+  handoffText: { fontFamily: F.sans, fontSize: 13.5, color: C.cream, lineHeight: 21, textAlign: 'center', marginTop: 6 },
+  meetLink: { color: C.mint, fontFamily: F.bold, fontSize: 14, textAlign: 'center', paddingVertical: 12 },
+  meetPending: { color: C.muted, fontFamily: F.sans, fontSize: 13, textAlign: 'center', paddingVertical: 12 },
   composer: { flexDirection: 'row', alignItems: 'flex-end', gap: 10, padding: 12 },
   input: {
     flex: 1, borderWidth: 1, borderColor: C.cardEdge, borderRadius: S.pill,
-    paddingHorizontal: 17, paddingVertical: 12, fontSize: 15, color: C.cream, maxHeight: 110,
+    paddingHorizontal: 17, paddingVertical: 12, fontFamily: F.sans, fontSize: 15, color: C.cream, maxHeight: 110,
     backgroundColor: 'rgba(0,0,0,0.25)',
   },
   send: {
@@ -192,5 +192,5 @@ const styles = StyleSheet.create({
     alignItems: 'center', justifyContent: 'center',
   },
   readonly: { flexDirection: 'row', alignItems: 'center', gap: 10, padding: 16 },
-  readonlyText: { flex: 1, fontSize: 12.5, color: C.gold, lineHeight: 19, fontWeight: '500' },
+  readonlyText: { flex: 1, fontFamily: F.medium, fontSize: 12.5, color: C.gold, lineHeight: 19 },
 });
