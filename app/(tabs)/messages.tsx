@@ -74,9 +74,9 @@ export default function Messages() {
 
 const styles = StyleSheet.create({
   avatar: {
-    width: 48, height: 48, borderRadius: 24, backgroundColor: C.mintDim,
+    width: 48, height: 48, borderRadius: 24, backgroundColor: 'transparent',
     alignItems: 'center', justifyContent: 'center',
-    borderWidth: 1, borderColor: 'rgba(74,222,128,0.35)',
+    borderWidth: 1, borderColor: C.mintEdge,
   },
   avatarText: { fontFamily: F.display, fontSize: 21, color: C.mint },
   name: { fontFamily: F.display, fontSize: 21, color: C.cream },

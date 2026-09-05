@@ -33,7 +33,7 @@ export function GateTrail({ status, waliName, herName }: {
         const color = failed ? C.danger : done ? C.mint : active ? C.gold : C.faint;
         return (
           <View key={i} style={styles.step}>
-            <View style={[styles.dot, { borderColor: color, backgroundColor: done ? C.mintDim : 'transparent' }]}>
+            <View style={[styles.dot, { borderColor: color, backgroundColor: 'transparent' }]}>
               <Ionicons name={failed ? 'close' : s.icon} size={12} color={color} />
             </View>
             <Text style={[styles.label, { color }]} numberOfLines={2}>{s.label}</Text>

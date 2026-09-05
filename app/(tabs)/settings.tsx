@@ -47,7 +47,7 @@ export default function Settings() {
         return (
           <Pressable key={r.actor.id} onPress={() => { setActor(r.actor); router.push('/'); }}>
             <View style={[styles.roleRow, active && styles.roleRowOn]}>
-              <View style={[styles.roleIcon, active && { backgroundColor: C.mintDim }]}>
+              <View style={styles.roleIcon}>
                 <Ionicons name={r.icon} size={17} color={active ? C.mint : C.muted} />
               </View>
               <View style={{ flex: 1 }}>
@@ -55,7 +55,7 @@ export default function Settings() {
                 <Text style={styles.roleSub}>{r.sub}</Text>
               </View>
               {badge > 0 && <Pill label={String(badge)} tone="gold" />}
-              {active && <Ionicons name="checkmark-circle" size={21} color={C.mint} />}
+              {active && <Ionicons name="checkmark" size={20} color={C.mint} />}
             </View>
           </Pressable>
         );
@@ -122,11 +122,8 @@ const styles = StyleSheet.create({
     backgroundColor: C.card, borderWidth: 1, borderColor: C.cardEdge,
     borderRadius: S.radius, padding: 14, marginBottom: 11,
   },
-  roleRowOn: { borderColor: C.mint, backgroundColor: 'rgba(74,222,128,0.08)' },
-  roleIcon: {
-    width: 38, height: 38, borderRadius: 19, backgroundColor: 'rgba(255,255,255,0.06)',
-    alignItems: 'center', justifyContent: 'center',
-  },
+  roleRowOn: { borderColor: C.mint },
+  roleIcon: { width: 34, alignItems: 'center', justifyContent: 'center' },
   roleName: { fontFamily: F.semi, fontSize: 16.5, color: C.cream },
   roleSub: { fontFamily: F.sans, fontSize: 12.5, color: C.muted, marginTop: 2 },
   lockNote: { fontFamily: F.sans, fontSize: 12.5, color: C.muted, lineHeight: 19, marginTop: 4, marginBottom: 8, paddingHorizontal: 4 },

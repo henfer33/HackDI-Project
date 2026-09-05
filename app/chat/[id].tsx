@@ -117,7 +117,9 @@ export default function Chat() {
           </View>
         )}
 
-        <SafeAreaView edges={['bottom']} style={{ backgroundColor: readOnly ? C.goldDim : 'rgba(0,0,0,0.3)' }}>
+        <SafeAreaView
+          edges={['bottom']}
+          style={{ borderTopWidth: 1, borderTopColor: readOnly ? C.goldEdge : C.cardEdge }}>
           {readOnly ? (
             <View style={styles.readonly}>
               <Ionicons name="eye-outline" size={16} color={C.gold} />
@@ -152,12 +154,12 @@ const styles = StyleSheet.create({
   banner: {
     flexDirection: 'row', alignItems: 'center', gap: 9,
     paddingHorizontal: S.pad, paddingVertical: 12,
-    backgroundColor: C.goldDim, borderBottomWidth: 1, borderBottomColor: 'rgba(242,194,48,0.25)',
+    borderBottomWidth: 1, borderBottomColor: C.goldEdge,
   },
   bannerText: { flex: 1, fontFamily: F.semi, fontSize: 13.5, color: C.cream },
   adab: {
     flexDirection: 'row', alignItems: 'center', gap: 9,
-    backgroundColor: C.mintDim, borderRadius: 14, padding: 12, marginBottom: 18,
+    borderWidth: 1, borderColor: C.cardEdge, borderRadius: 14, padding: 12, marginBottom: 18,
   },
   adabText: { flex: 1, fontFamily: F.sans, fontSize: 12.5, color: C.soft, lineHeight: 18 },
   wrap: { marginBottom: 13, maxWidth: '84%' },
@@ -169,12 +171,12 @@ const styles = StyleSheet.create({
   other: { backgroundColor: C.card, borderWidth: 1, borderColor: C.cardEdge, borderBottomLeftRadius: 6 },
   msg: { fontFamily: F.sans, fontSize: 15, color: C.cream, lineHeight: 21 },
   system: {
-    backgroundColor: 'rgba(255,255,255,0.05)', borderRadius: 14, padding: 13,
+    borderWidth: 1, borderColor: C.cardEdge, borderRadius: 14, padding: 13,
     marginBottom: 16, alignSelf: 'center', maxWidth: '94%',
   },
   systemText: { fontFamily: F.sans, fontSize: 12.5, color: C.soft, textAlign: 'center', lineHeight: 19 },
   handoff: {
-    backgroundColor: C.goldDim, borderWidth: 1, borderColor: 'rgba(242,194,48,0.4)',
+    borderWidth: 1, borderColor: C.goldEdge,
     borderRadius: S.radius, padding: 20, marginTop: 10, alignItems: 'center', gap: 4,
   },
   handoffTitle: { fontFamily: F.display, fontSize: 21, color: C.gold, marginTop: 6 },
