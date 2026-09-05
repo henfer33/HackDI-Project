@@ -119,7 +119,7 @@ export default function Settings() {
 const styles = StyleSheet.create({
   roleRow: {
     flexDirection: 'row', alignItems: 'center', gap: 12,
-    backgroundColor: C.card, borderWidth: 1, borderColor: C.cardEdge,
+    backgroundColor: 'transparent', borderWidth: 1, borderColor: C.cardEdge,
     borderRadius: S.radius, padding: 14, marginBottom: 11,
   },
   roleRowOn: { borderColor: C.mint },

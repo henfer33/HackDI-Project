@@ -65,7 +65,11 @@ export default function Person() {
             <Button
               title="Send to wali"
               icon="paper-plane-outline"
-              onPress={() => { sendRequest(actor.id, p.id, note.trim()); router.back(); }}
+              onPress={() => {
+                sendRequest(actor.id, p.id, note.trim());
+                if (router.canGoBack()) router.back();
+                else router.replace('/');
+              }}
             />
           </Card>
         </>

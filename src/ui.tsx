@@ -234,7 +234,7 @@ const styles = StyleSheet.create({
   displaySub: { color: C.soft, fontFamily: F.sans, fontSize: 15, marginTop: 6, textAlign: 'center' },
   section: { ...eyebrow, color: C.soft, marginBottom: 13, marginTop: 6 },
   card: {
-    backgroundColor: C.card,
+    backgroundColor: 'transparent',
     borderColor: C.cardEdge,
     borderWidth: 1,
     borderRadius: S.radius,
@@ -253,7 +253,7 @@ const styles = StyleSheet.create({
   fieldValue: { fontFamily: F.sans, fontSize: 15, color: C.cream, lineHeight: 21 },
   row: {
     flexDirection: 'row', alignItems: 'center',
-    backgroundColor: C.card, borderWidth: 1, borderColor: C.cardEdge,
+    backgroundColor: 'transparent', borderWidth: 1, borderColor: C.cardEdge,
     borderRadius: S.pill, paddingVertical: 14, paddingHorizontal: 15, marginBottom: 11,
   },
   rowIcon: { width: 30, alignItems: 'center' },

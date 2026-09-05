@@ -6,7 +6,7 @@ import {
   KeyboardAvoidingView, Platform, Pressable, ScrollView,
   StyleSheet, Text, TextInput, View,
 } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useApp } from '../../src/store';
 import { C, F, S } from '../../src/theme';
 import { Button, Pill } from '../../src/ui';
@@ -20,6 +20,7 @@ export default function Chat() {
   } = useApp();
 
   const router = useRouter();
+  const insets = useSafeAreaInsets();
   const r = request(requestId);
   const [draft, setDraft] = useState('');
   const scroller = useRef<ScrollView>(null);
@@ -56,7 +57,10 @@ export default function Chat() {
         keyboardVerticalOffset={0}>
         <SafeAreaView edges={['top']}>
           <View style={styles.banner}>
-            <Pressable onPress={() => router.back()} hitSlop={12} style={{ marginRight: 2 }}>
+            <Pressable
+              onPress={() => (router.canGoBack() ? router.back() : router.replace('/messages'))}
+              hitSlop={12}
+              style={{ marginRight: 2 }}>
               <Ionicons name="chevron-back" size={22} color={C.mint} />
             </Pressable>
             <Ionicons name="shield-checkmark" size={15} color={C.gold} />
@@ -125,9 +129,12 @@ export default function Chat() {
           </View>
         )}
 
-        <SafeAreaView
-          edges={['bottom']}
-          style={{ borderTopWidth: 1, borderTopColor: readOnly ? C.goldEdge : C.cardEdge }}>
+        <View
+          style={{
+            borderTopWidth: 1,
+            borderTopColor: readOnly ? C.goldEdge : C.cardEdge,
+            paddingBottom: insets.bottom,
+          }}>
           {readOnly ? (
             <View style={styles.readonly}>
               <Ionicons name="eye-outline" size={16} color={C.gold} />
@@ -151,7 +158,7 @@ export default function Chat() {
               </Pressable>
             </View>
           )}
-        </SafeAreaView>
+        </View>
       </KeyboardAvoidingView>
     </LinearGradient>
   );

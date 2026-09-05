@@ -111,7 +111,7 @@ export default function Browse() {
 const styles = StyleSheet.create({
   searchRow: {
     flexDirection: 'row', alignItems: 'center', gap: 10,
-    backgroundColor: C.card, borderWidth: 1, borderColor: C.cardEdge,
+    backgroundColor: 'transparent', borderWidth: 1, borderColor: C.cardEdge,
     borderRadius: S.pill, paddingHorizontal: 16, paddingVertical: 4, marginBottom: 14,
   },
   search: { flex: 1, color: C.cream, fontFamily: F.sans, fontSize: 15, paddingVertical: 12 },
