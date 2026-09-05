@@ -14,6 +14,8 @@ export interface Profile {
   timeline: Timeline;
   about: string;
   waliId?: string; // women only — profile is inactive without it
+  /** Women only. Lets her wali write in her chats; he can always read either way. */
+  waliMaySend?: boolean;
 }
 
 export interface Wali {

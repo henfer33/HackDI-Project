@@ -10,7 +10,7 @@ import { Card, Empty, PageTitle, Pill, Screen, SectionLabel } from '../../src/ui
  */
 export default function Messages() {
   const router = useRouter();
-  const { actor, threadsFor, counterpart, lastMessage, wali, meetFor } = useApp();
+  const { actor, threadsFor, counterpart, lastMessage, wali, meetFor, profile } = useApp();
 
   const threads = threadsFor(actor);
   const isWali = actor.role === 'wali';
@@ -19,7 +19,7 @@ export default function Messages() {
     <Screen>
       <PageTitle
         title="Messages"
-        subtitle={isWali ? 'You can read these. You cannot write in them.' : 'Your wali is present in every one.'}
+        subtitle={isWali ? 'You can read every one of these.' : 'Your wali is present in every one.'}
       />
 
       {threads.length === 0 && (
@@ -54,9 +54,15 @@ export default function Messages() {
               </View>
             </View>
             <View style={styles.pills}>
-              {isWali
-                ? <Pill label="Read-only" tone="gold" icon="eye-outline" />
-                : <Pill label={`${g?.name.split(' ')[0]} is reading`} tone="gold" icon="shield-checkmark" />}
+              {isWali ? (
+                <Pill
+                  label={profile(r.womanId)?.waliMaySend ? 'You may write' : 'Read-only'}
+                  tone="gold"
+                  icon={profile(r.womanId)?.waliMaySend ? 'chatbubble-ellipses-outline' : 'eye-outline'}
+                />
+              ) : (
+                <Pill label={`${g?.name.split(' ')[0]} is reading`} tone="gold" icon="shield-checkmark" />
+              )}
               {meet?.confirmedBy && <Pill label="Ready to meet" icon="people-outline" />}
             </View>
           </Card>

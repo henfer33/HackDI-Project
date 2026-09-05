@@ -39,6 +39,8 @@ interface Ctx {
 
   waliNotify: WaliNotify;
   setWaliNotify: (m: WaliNotify) => void;
+  /** Her switch: may her wali write in her chats? He can always read. */
+  setWaliMaySend: (womanId: string, may: boolean) => void;
 
   reset: () => void;
 }
@@ -163,6 +165,10 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
     [requests, walis],
   );
 
+  const setWaliMaySend: Ctx['setWaliMaySend'] = useCallback((womanId, may) => {
+    setProfiles((xs) => xs.map((p) => (p.id === womanId ? { ...p, waliMaySend: may } : p)));
+  }, []);
+
   const sendMessage: Ctx['sendMessage'] = useCallback(
     (requestId, senderId, text) => {
       const body = text.trim();
@@ -171,12 +177,16 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
       if (!r) return;
       // The chat is only live once both gates have passed.
       if (r.status !== 'accepted') return;
-      // The wali reads; he does not speak. Enforced here, not just in the UI,
-      // so the guarantee holds no matter which screen calls this.
-      if (senderId !== r.manId && senderId !== r.womanId) return;
+      // The couple can always write. The wali can write only where she has
+      // allowed it; reading is never in question. Enforced here rather than in
+      // the UI so the rule holds whichever screen calls this.
+      if (senderId !== r.manId && senderId !== r.womanId) {
+        const her = profiles.find((p) => p.id === r.womanId);
+        if (!(senderId === r.waliId && her?.waliMaySend)) return;
+      }
       setMessages((xs) => [...xs, { id: uid('msg'), requestId, senderId, text: body, at: Date.now() }]);
     },
-    [requests],
+    [requests, profiles],
   );
 
   const proposeMeet: Ctx['proposeMeet'] = useCallback((requestId, by) => {
@@ -232,12 +242,12 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
       sendRequest, waliDecide, womanDecide,
       sendMessage, proposeMeet, confirmMeet, meetFor,
       threadsFor, inboxFor, lastMessage, counterpart,
-      waliNotify, setWaliNotify,
+      waliNotify, setWaliNotify, setWaliMaySend,
       reset,
     }),
     [profiles, walis, requests, messages, meets, actor, profile, wali, request, addProfile, addWali,
      sendRequest, waliDecide, womanDecide, sendMessage, proposeMeet, confirmMeet, meetFor,
-     threadsFor, inboxFor, lastMessage, counterpart, waliNotify, reset],
+     threadsFor, inboxFor, lastMessage, counterpart, waliNotify, setWaliMaySend, reset],
   );
 
   // Dev-only handle so the flow can be driven and inspected without tapping through

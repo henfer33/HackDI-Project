@@ -9,9 +9,14 @@ import { Actor, WaliNotify } from '../../src/types';
 
 export default function Settings() {
   const router = useRouter();
-  const { actor, setActor, profiles, walis, reset, waliNotify, setWaliNotify, inboxFor } = useApp();
+  const {
+    actor, setActor, profiles, walis, reset,
+    waliNotify, setWaliNotify, inboxFor, profile, wali, setWaliMaySend,
+  } = useApp();
 
-  const [marriageOnly] = useState(true); // locked on, like wali oversight
+  const me = actor.role === 'wali' ? undefined : profile(actor.id);
+  const myWali = me?.waliId ? wali(me.waliId) : undefined;
+
   const [notifications, setNotifications] = useState(true);
   const [hideFromCommunity, setHideFromCommunity] = useState(false);
 
@@ -56,17 +61,23 @@ export default function Settings() {
         );
       })}
 
-      <SectionLabel>Guardianship</SectionLabel>
-      <Row icon="shield-checkmark" iconColor={C.gold} label="Wali oversight" locked
-        right={<Toggle on locked />} />
-      <Row icon="heart-circle-outline" iconColor={C.gold} label="Her consent required" locked
-        right={<Toggle on locked />} />
-      <Row icon="eye-off-outline" iconColor={C.gold} label="Wali can send messages" locked
-        right={<Toggle on={false} locked />} />
-      <Text style={styles.lockNote}>
-        These three cannot be switched off. That is the whole point — on other apps the guardian is
-        a feature you can disable, and a disabled guardian is not a guardian.
-      </Text>
+      {me?.role === 'woman' && (
+        <>
+          <SectionLabel>Your wali</SectionLabel>
+          <Row
+            icon="chatbubble-ellipses-outline"
+            iconColor={C.gold}
+            label="Wali can send messages"
+            onPress={() => setWaliMaySend(me.id, !me.waliMaySend)}
+            right={<Toggle on={!!me.waliMaySend} />}
+          />
+          <Text style={styles.lockNote}>
+            Yours to decide. Off, {myWali?.name.split(' ')[0] ?? 'he'} reads your conversations
+            without writing in them. On, he can speak in them too. Either way he always sees
+            everything — that part is not a setting.
+          </Text>
+        </>
+      )}
 
       <SectionLabel>Reaching the wali</SectionLabel>
       <Card>
@@ -88,7 +99,6 @@ export default function Settings() {
       <SectionLabel>Preferences</SectionLabel>
       <Row icon="notifications-outline" label="Notifications"
         onPress={() => setNotifications((v) => !v)} right={<Toggle on={notifications} />} />
-      <Row icon="people-outline" label="Marriage intent only" locked right={<Toggle on={marriageOnly} locked />} />
       <Row icon="eye-off-outline" label="Hide profile from community"
         onPress={() => setHideFromCommunity((v) => !v)} right={<Toggle on={hideFromCommunity} />} />
 

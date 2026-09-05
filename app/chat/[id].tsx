@@ -30,6 +30,9 @@ export default function Chat() {
   const g = wali(r.waliId);
 
   const isWali = actor.role === 'wali';
+  // She decides whether her wali may write here. Reading is never in question.
+  const waliMayWrite = !!woman?.waliMaySend;
+  const readOnly = isWali && !waliMayWrite;
   const thread = messages.filter((m) => m.requestId === requestId);
   const meet = meetFor(requestId);
   const meetDone = meet?.confirmedBy;
@@ -55,7 +58,7 @@ export default function Chat() {
           <Text style={styles.bannerText}>
             {man?.name.split(' ')[0]} · {woman?.name.split(' ')[0]} · {g?.name.split(' ')[0]}
           </Text>
-          <Pill label={isWali ? 'Read-only' : 'Wali is reading'} tone="gold" />
+          <Pill label={readOnly ? 'Read-only' : isWali ? 'You may write' : 'Wali is reading'} tone="gold" />
         </View>
 
         <ScrollView
@@ -114,12 +117,13 @@ export default function Chat() {
           </View>
         )}
 
-        <SafeAreaView edges={['bottom']} style={{ backgroundColor: isWali ? C.goldDim : 'rgba(0,0,0,0.3)' }}>
-          {isWali ? (
+        <SafeAreaView edges={['bottom']} style={{ backgroundColor: readOnly ? C.goldDim : 'rgba(0,0,0,0.3)' }}>
+          {readOnly ? (
             <View style={styles.readonly}>
               <Ionicons name="eye-outline" size={16} color={C.gold} />
               <Text style={styles.readonlyText}>
-                You are here as the wali. You can read everything; you cannot send messages.
+                You are here as the wali. You can read everything. {woman?.name.split(' ')[0]} has
+                not enabled messages from you.
               </Text>
             </View>
           ) : (

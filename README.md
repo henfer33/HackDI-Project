@@ -47,9 +47,11 @@ for her. In fiqh a woman's consent is a condition of the marriage — a wali fac
 he cannot compel. An app that let him accept on her behalf would be less compliant than
 the mainstream apps it is competing with, not more.
 
-**The wali reads, he does not speak.** He sees every message in the chat and can send
-none. This is enforced in `src/store.tsx`, not just hidden in the UI — `sendMessage`
-rejects any sender who is not the man or the woman on that request.
+**The wali always reads. Whether he writes is hers to decide.** He sees every message
+in a chat he is party to, and that is not configurable. Whether he can also send
+messages is a single switch on her settings, shown to no one else and scoped to her
+alone. Both halves are enforced in `src/store.tsx` rather than the UI — `sendMessage`
+rejects the wali unless that woman has enabled it.
 
 **Everyone party to a chat can reach it.** The suitor, the woman and the wali each
 have a Messages tab. The wali's lists the same conversations, marked read-only.
@@ -86,9 +88,9 @@ Settings → "Viewing as" switches between Yusuf (suitor), Maryam (woman) and Im
 (wali) so the whole flow runs on one device. The tab bar relabels itself per role and
 badges the pending count. "Reset demo data" clears everything.
 
-Three rows in Settings under **Guardianship** are deliberately un-togglable — wali
-oversight, her consent, and the wali being unable to send messages. That padlock is
-the pitch: on other apps the guardian is a feature you can switch off.
+Wali oversight and her consent are not settings at all — they are the flow, with no
+UI to turn them off. The one guardianship control that exists, **Wali can send
+messages**, belongs to the woman and appears only in her settings.
 
 State is in memory only, so a reload starts over. That is deliberate for a 48-hour
 build; there is no backend to configure and nothing to fail on venue wifi.
