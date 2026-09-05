@@ -12,6 +12,7 @@ create table profiles (
   career text not null,
   timeline text not null,
   about text not null default '',
+  email text,
   wali_id text,
   wali_may_send boolean not null default false
 );

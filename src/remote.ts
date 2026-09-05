@@ -5,6 +5,7 @@ import { Request, MeetIntent, Message, Profile, Wali } from './types';
 const toProfile = (r: any): Profile => ({
   id: r.id, role: r.role, name: r.name, age: r.age, location: r.location,
   education: r.education, career: r.career, timeline: r.timeline, about: r.about,
+  email: r.email ?? '',
   waliId: r.wali_id ?? undefined, waliMaySend: r.wali_may_send ?? false,
 });
 const toWali = (r: any): Wali => ({
@@ -69,6 +70,7 @@ export const remote = {
       ...(patch.career !== undefined && { career: patch.career }),
       ...(patch.timeline !== undefined && { timeline: patch.timeline }),
       ...(patch.about !== undefined && { about: patch.about }),
+      ...(patch.email !== undefined && { email: patch.email }),
     }).eq('id', id),
   updateWali: (id: string, patch: Partial<Wali>) =>
     supabase!.from('walis').update({
@@ -82,7 +84,7 @@ export const remote = {
     supabase!.from('profiles').insert({
       id: p.id, role: p.role, name: p.name, age: p.age, location: p.location,
       education: p.education, career: p.career, timeline: p.timeline,
-      about: p.about, wali_id: p.waliId ?? null,
+      about: p.about, email: p.email, wali_id: p.waliId ?? null,
     }),
   insertWali: (w: Wali) =>
     supabase!.from('walis').insert({

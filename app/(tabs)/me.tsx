@@ -60,6 +60,7 @@ export default function Me() {
           <Card>
             <Field label="Education" value={me.education} />
             <Field label="Career" value={me.career} />
+            <Field label="Email" value={me.email || 'Not set'} />
             <Field label="Location" value={me.location} />
             <Field label="Marriage timeline" value={me.timeline} />
             <Field label="About" value={me.about} />

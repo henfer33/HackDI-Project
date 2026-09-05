@@ -13,6 +13,7 @@ export default function Onboarding() {
 
   const [role, setRole] = useState<'man' | 'woman'>('woman');
   const [name, setName] = useState('');
+  const [email, setEmail] = useState('');
   const [age, setAge] = useState('');
   const [location, setLocation] = useState('');
   const [education, setEducation] = useState('');
@@ -24,7 +25,8 @@ export default function Onboarding() {
   const [waliRel, setWaliRel] = useState('Father');
   const [waliContact, setWaliContact] = useState('');
 
-  const coreDone = name && age && location && education && career;
+  const emailOk = contactKind(email) === 'email';
+  const coreDone = !!name && !!age && !!location && !!education && !!career && emailOk;
   // A wali who cannot be reached is not attached in any useful sense.
   const contactOk = contactKind(waliContact) !== 'invalid';
   const waliDone = role === 'man' || (!!waliName && contactOk);
@@ -33,6 +35,7 @@ export default function Onboarding() {
   const submit = () => {
     const id = addProfile({
       role, name, age: Number(age), location, education, career, timeline,
+      email: email.trim(),
       about: about || 'No description yet.',
     });
     if (role === 'woman') {
@@ -44,7 +47,7 @@ export default function Onboarding() {
 
   return (
     <Screen edges={[]}>
-      <PageTitle title="Create profile" subtitle="Four fields, and a wali if you are a woman." />
+      <PageTitle title="Create profile" subtitle="Your details, and a wali if you are a woman." />
       <Card>
         <SectionLabel>I am a</SectionLabel>
         <View style={{ flexDirection: 'row', gap: 10 }}>
@@ -67,6 +70,11 @@ export default function Onboarding() {
           style={styles.input} placeholder="Full name" placeholderTextColor={C.faint}
           value={name} onChangeText={setName}
           autoCapitalize="words" autoCorrect={false} returnKeyType="next" />
+        <TextInput
+          style={styles.input} placeholder="Email address" placeholderTextColor={C.faint}
+          value={email} onChangeText={setEmail}
+          autoCapitalize="none" autoCorrect={false} keyboardType="email-address"
+          returnKeyType="next" />
         <TextInput
           style={styles.input} placeholder="Age" placeholderTextColor={C.faint}
           keyboardType="number-pad" value={age}
@@ -134,7 +142,9 @@ export default function Onboarding() {
       <Button title="Create profile" onPress={submit} disabled={!canSubmit} />
       {!canSubmit && (
         <Text style={styles.blocked}>
-          {role === 'woman' && coreDone && waliName && !contactOk
+          {name && age && location && education && career && !emailOk
+            ? 'Enter a valid email address.'
+            : role === 'woman' && coreDone && waliName && !contactOk
             ? 'That does not look like a phone number or an email address.'
             : role === 'woman' && coreDone && !waliDone
               ? 'Add your wali to activate your profile.'

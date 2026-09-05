@@ -22,6 +22,7 @@ export default function EditProfile() {
   const [gContact, setGContact] = useState(asWali?.contact ?? myWali?.contact ?? '');
 
   const [name, setName] = useState(me?.name ?? '');
+  const [email, setEmail] = useState(me?.email ?? '');
   const [age, setAge] = useState(String(me?.age ?? ''));
   const [location, setLocation] = useState(me?.location ?? '');
   const [education, setEducation] = useState(me?.education ?? '');
@@ -36,6 +37,7 @@ export default function EditProfile() {
   useEffect(() => {
     if (me) {
       setName(me.name);
+      setEmail(me.email ?? '');
       setAge(String(me.age));
       setLocation(me.location);
       setEducation(me.education);
@@ -57,7 +59,9 @@ export default function EditProfile() {
   }
 
   const contactOk = contactKind(gContact) !== 'invalid';
-  const coreOk = !!name.trim() && !!age && !!location.trim() && !!education.trim() && !!career.trim();
+  const emailOk = contactKind(email) === 'email';
+  const coreOk = !!name.trim() && !!age && !!location.trim() && !!education.trim()
+    && !!career.trim() && emailOk;
   const canSave = isWali ? !!gName.trim() && contactOk : coreOk && (!myWali || (!!gName.trim() && contactOk));
 
   const save = () => {
@@ -65,7 +69,7 @@ export default function EditProfile() {
       updateWali(asWali.id, { name: name || gName, relationship: gRel, contact: gContact.trim() });
     } else if (me) {
       updateProfile(me.id, {
-        name: name.trim(), age: Number(age), location: location.trim(),
+        name: name.trim(), email: email.trim(), age: Number(age), location: location.trim(),
         education: education.trim(), career: career.trim(), timeline, about: about.trim(),
       });
       if (myWali) {
@@ -112,6 +116,10 @@ export default function EditProfile() {
             <TextInput
               style={styles.input} placeholder="Full name" placeholderTextColor={C.faint}
               value={name} onChangeText={setName} autoCapitalize="words" autoCorrect={false} />
+            <TextInput
+              style={styles.input} placeholder="Email address" placeholderTextColor={C.faint}
+              value={email} onChangeText={setEmail}
+              autoCapitalize="none" autoCorrect={false} keyboardType="email-address" />
             <TextInput
               style={styles.input} placeholder="Age" placeholderTextColor={C.faint}
               keyboardType="number-pad" value={age}
@@ -169,7 +177,9 @@ export default function EditProfile() {
       <Button title="Save changes" icon="checkmark" onPress={save} disabled={!canSave} />
       {!canSave && (
         <Text style={styles.blocked}>
-          {!contactOk && gContact
+          {!emailOk && email
+            ? 'Enter a valid email address.'
+            : !contactOk && gContact
             ? 'That does not look like a phone number or an email address.'
             : 'Fill in every field to save.'}
         </Text>

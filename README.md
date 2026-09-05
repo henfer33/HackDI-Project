@@ -3,8 +3,12 @@
 A Sharia-compliant marriage app for the Western Muslim diaspora, where the wali is
 structural rather than a toggle.
 
-Hackathon MVP. React Native (Expo) with a Supabase backend, or in-memory state
-when no backend is configured.
+Hackathon MVP. React Native (Expo), running entirely in memory on seeded data.
+
+A Supabase backend is wired up but switched off: uncomment the two
+EXPO_PUBLIC_SUPABASE_ lines in `.env` to turn it back on. Local means no
+network dependency and nothing to configure, at the cost of multi-device sync,
+so several phones cannot see each other's changes.
 
 ## Running it
 
@@ -34,9 +38,9 @@ in `src/store.tsx` on the client. Anyone holding the publishable key could bypas
 them by talking to the REST API directly. That is acceptable for seeded demo data and
 is the first thing to fix if this ever holds anything real.
 
-**It degrades rather than dies.** With no credentials in `.env` the app runs entirely
-in memory on seeded data, so a dead venue wifi costs you multi-device sync and
-nothing else. `live` and `offline` on the store say which mode you are in.
+**This is the mode it ships in.** With no credentials in `.env` the app runs entirely
+in memory on seeded data, so nothing depends on the network. `live` and `offline`
+on the store say which mode you are in.
 
 Realtime propagation is what makes the multi-device demo work: three clients open,
 the wali taps Approve, and her screen updates without a refresh.

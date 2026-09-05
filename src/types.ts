@@ -13,6 +13,8 @@ export interface Profile {
   career: string;
   timeline: Timeline;
   about: string;
+  /** Their own address. Where the app writes to them, and their account identity. */
+  email: string;
   waliId?: string; // women only; profile is inactive without it
   /** Women only. Lets her wali write in her chats; he can always read either way. */
   waliMaySend?: boolean;
