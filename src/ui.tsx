@@ -137,8 +137,8 @@ export function Pill({
     muted: { fg: C.muted, edge: C.cardEdge },
   }[tone];
   return (
-    <View style={[styles.pill, { borderColor: map.edge }]}>
-      {icon && <Ionicons name={icon} size={11} color={map.fg} />}
+    <View style={styles.pill}>
+      {icon && <Ionicons name={icon} size={12} color={map.fg} />}
       <Text style={[styles.pillText, { color: map.fg }]}>{label}</Text>
     </View>
   );
@@ -230,13 +230,10 @@ const styles = StyleSheet.create({
     paddingVertical: 15, paddingHorizontal: 20, borderRadius: S.pill, borderWidth: 1,
   },
   btnText: { fontFamily: F.bold, fontSize: 15 },
-  pill: {
-    flexDirection: 'row', alignItems: 'center', gap: 5,
-    paddingHorizontal: 11, paddingVertical: 6, borderRadius: S.pill,
-    alignSelf: 'flex-start', borderWidth: 1, backgroundColor: 'transparent',
-  },
-  pillText: { fontFamily: F.bold, fontSize: 11.5, letterSpacing: 0.3 },
-  fieldLabel: { ...eyebrow, fontFamily: F.sans, fontSize: 10, color: C.faint, marginBottom: 3 },
+  // Plain text label: no capsule, no fill, no border.
+  pill: { flexDirection: 'row', alignItems: 'center', gap: 5, alignSelf: 'flex-start' },
+  pillText: { fontFamily: F.semi, fontSize: 12.5, letterSpacing: 0.2 },
+  fieldLabel: { ...eyebrow, fontSize: 10, color: C.faint, marginBottom: 3 },
   fieldValue: { fontFamily: F.sans, fontSize: 15, color: C.cream, lineHeight: 21 },
   row: {
     flexDirection: 'row', alignItems: 'center',

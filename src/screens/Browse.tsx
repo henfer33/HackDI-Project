@@ -131,5 +131,5 @@ const styles = StyleSheet.create({
   name: { flex: 1, fontFamily: F.display, fontSize: 24, color: C.cream },
   age: { fontFamily: F.sans, fontSize: 17, color: C.soft },
   meta: { fontFamily: F.sans, fontSize: 14, color: C.muted, marginTop: 4 },
-  pills: { flexDirection: 'row', flexWrap: 'wrap', gap: 8, marginTop: 14 },
+  pills: { flexDirection: 'row', flexWrap: 'wrap', columnGap: 18, rowGap: 8, marginTop: 14 },
 });
