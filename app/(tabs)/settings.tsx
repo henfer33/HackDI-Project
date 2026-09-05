@@ -33,7 +33,7 @@ export default function Settings() {
     try {
       const body = requestMessage(myWali.name, me.name);
       const res = await notifyWali(myWali, waliNotify, 'A request on Khitbah', body);
-      if (res.ok && res.path === 'server') {
+      if (res.ok && (res.path === 'server' || res.path === 'apify')) {
         say('Sent', `${myWali.name} has been notified by ${res.channel === 'email' ? 'email' : 'SMS'}.`);
       } else if (!res.ok) {
         say('Could not send', res.reason ?? 'Something went wrong.');

@@ -27,10 +27,33 @@ interface Payload {
   message: string;
 }
 
+async function sendViaApify(to: string, subject: string, message: string) {
+  const token = Deno.env.get('APIFY_TOKEN');
+  if (!token) return null;
+  const res = await fetch(
+    `https://api.apify.com/v2/acts/apify~send-mail/runs?token=${token}&waitForFinish=60`,
+    {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ to, subject, text: message }),
+    },
+  );
+  const body = await res.json().catch(() => null);
+  const status = body?.data?.status;
+  if (res.ok && status === 'SUCCEEDED') return { ok: true, id: body?.data?.id };
+  return { ok: false, reason: 'provider', detail: status ? `Mail actor finished as ${status}.` : `Apify returned ${res.status}.` };
+}
+
 async function sendEmail(to: string, subject: string, message: string) {
+  // Apify first when its token is set; Resend otherwise.
+  const viaApify = await sendViaApify(to, subject, message);
+  if (viaApify) return viaApify;
+
   const key = Deno.env.get('RESEND_API_KEY');
   const from = Deno.env.get('EMAIL_FROM');
-  if (!key || !from) return { ok: false, reason: 'unconfigured', detail: 'RESEND_API_KEY or EMAIL_FROM is not set.' };
+  if (!key || !from) {
+    return { ok: false, reason: 'unconfigured', detail: 'No email provider is configured (APIFY_TOKEN or RESEND_API_KEY).' };
+  }
 
   const res = await fetch('https://api.resend.com/emails', {
     method: 'POST',

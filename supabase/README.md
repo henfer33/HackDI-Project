@@ -25,6 +25,13 @@ npx supabase functions deploy notify-wali --project-ref fwaglkvfvpzwtthicaxe
 
 ### Configure
 
+Email, via Apify. Reuses the `apify/send-mail` actor and needs no domain
+verification, which makes it the quickest to get working:
+
+```bash
+npx supabase secrets set APIFY_TOKEN=apify_api_xxx
+```
+
 Email, via [resend.com](https://resend.com). The free tier will only send to the
 address you signed up with until you verify a domain:
 
@@ -40,8 +47,11 @@ trial notice:
 npx supabase secrets set TWILIO_ACCOUNT_SID=ACxxx TWILIO_AUTH_TOKEN=xxx TWILIO_FROM=+15551234567
 ```
 
-Set only the pair you need. With Resend configured and Twilio not, email sends
-and SMS falls back to the composer.
+Set only what you need. Email tries Apify first, then Resend. With email
+configured and Twilio not, email sends and SMS falls back to the composer.
+
+Note that Apify has no SMS sender. Its store carries only receive-side
+temporary-number scrapers, so SMS needs Twilio or stays on the composer.
 
 ### Check it
 

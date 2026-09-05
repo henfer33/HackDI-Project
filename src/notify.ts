@@ -32,12 +32,48 @@ export function channelFor(contact: string, preferred: WaliNotify): WaliNotify {
 
 const digits = (s: string) => s.replace(/[^\d+]/g, '');
 
-export type SendPath = 'server' | 'composer';
+export type SendPath = 'server' | 'apify' | 'composer';
 export interface SendResult {
   ok: boolean;
   channel: WaliNotify;
   path?: SendPath;
   reason?: string;
+}
+
+const APIFY_TOKEN = process.env.EXPO_PUBLIC_APIFY_TOKEN;
+
+/**
+ * Sends email through the apify/send-mail actor, called straight from the app.
+ *
+ * The token is compiled into the bundle, so anyone who installs the app can read
+ * it. That is acceptable for a hackathon demo and not beyond one: the Edge
+ * Function above is the real path, and it is tried first.
+ *
+ * Apify has no SMS sender, so this covers email only.
+ */
+async function sendViaApify(to: string, subject: string, message: string): Promise<SendResult | null> {
+  if (!APIFY_TOKEN) return null;
+  try {
+    const res = await fetch(
+      `https://api.apify.com/v2/acts/apify~send-mail/runs?token=${APIFY_TOKEN}&waitForFinish=60`,
+      {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ to, subject, text: message }),
+      },
+    );
+    const body = await res.json().catch(() => null);
+    const status = body?.data?.status;
+    if (res.ok && status === 'SUCCEEDED') return { ok: true, channel: 'email', path: 'apify' };
+    return {
+      ok: false,
+      channel: 'email',
+      path: 'apify',
+      reason: status ? `The mail actor finished as ${status}.` : `Apify returned ${res.status}.`,
+    };
+  } catch {
+    return null; // offline or blocked: let the composer take over
+  }
 }
 
 /**
@@ -81,10 +117,16 @@ export async function notifyWali(
     return { ok: false, channel, reason: 'This wali has no phone or email on file.' };
   }
 
-  // Send it properly if a provider is wired up. Only if that is unavailable do
-  // we hand the message to the person's own Messages or Mail app.
-  const server = await sendViaServer(channel, wali.contact.trim(), subject, body);
+  // Send it properly if a provider is wired up. Only if none is available do we
+  // hand the message to the person's own Messages or Mail app.
+  const to = wali.contact.trim();
+  const server = await sendViaServer(channel, to, subject, body);
   if (server) return server;
+
+  if (channel === 'email') {
+    const viaApify = await sendViaApify(to, subject, body);
+    if (viaApify) return viaApify;
+  }
 
   const url =
     channel === 'sms'
