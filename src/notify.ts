@@ -150,7 +150,7 @@ export function requestMessage(waliName: string, wardName: string, suitorName?: 
   const who = suitorName ? `${suitorName} has` : 'Someone has';
   return (
     `Assalamu alaikum ${waliName}, ` +
-    `${who} sent a marriage request for ${wardName} on Khitbah. ` +
+    `${who} sent a request for ${wardName} on Khitbah. ` +
     `It is waiting for your review. Nothing reaches ${wardName.split(' ')[0]} until you approve it.`
   );
 }

@@ -1,4 +1,4 @@
-import { MatchRequest, Message, Profile, Wali } from './types';
+import { Request, Message, Profile, Wali } from './types';
 
 export const SEED_PROFILES: Profile[] = [
   {
@@ -71,5 +71,5 @@ export const SEED_WALIS: Wali[] = [
   { id: 'g4', name: 'Tariq Malik', relationship: 'Uncle', contact: '+44 7700 900884', wardId: 'w4' },
 ];
 
-export const SEED_REQUESTS: MatchRequest[] = [];
+export const SEED_REQUESTS: Request[] = [];
 export const SEED_MESSAGES: Message[] = [];

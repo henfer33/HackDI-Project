@@ -1,5 +1,5 @@
 import { supabase } from './supabase';
-import { MatchRequest, MeetIntent, Message, Profile, Wali } from './types';
+import { Request, MeetIntent, Message, Profile, Wali } from './types';
 
 /** DB rows are snake_case; the app is camelCase. Mapping lives here only. */
 const toProfile = (r: any): Profile => ({
@@ -10,7 +10,7 @@ const toProfile = (r: any): Profile => ({
 const toWali = (r: any): Wali => ({
   id: r.id, name: r.name, relationship: r.relationship, contact: r.contact, wardId: r.ward_id,
 });
-const toRequest = (r: any): MatchRequest => ({
+const toRequest = (r: any): Request => ({
   id: r.id, manId: r.man_id, womanId: r.woman_id, waliId: r.wali_id,
   status: r.status, note: r.note ?? '', createdAt: new Date(r.created_at).getTime(),
 });
@@ -44,12 +44,12 @@ export async function fetchAll() {
 }
 
 export const remote = {
-  insertRequest: (r: MatchRequest) =>
+  insertRequest: (r: Request) =>
     supabase!.from('requests').insert({
       id: r.id, man_id: r.manId, woman_id: r.womanId, wali_id: r.waliId,
       status: r.status, note: r.note,
     }),
-  setRequestStatus: (id: string, status: MatchRequest['status']) =>
+  setRequestStatus: (id: string, status: Request['status']) =>
     supabase!.from('requests').update({ status }).eq('id', id),
   insertMessage: (m: Message) =>
     supabase!.from('messages').insert({

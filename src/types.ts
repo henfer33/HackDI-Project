@@ -38,7 +38,7 @@ export type RequestStatus =
   | 'declined_woman'
   | 'accepted';
 
-export interface MatchRequest {
+export interface Request {
   id: string;
   manId: string;
   womanId: string;

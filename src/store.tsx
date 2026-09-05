@@ -5,7 +5,7 @@ import { SEED_MESSAGES, SEED_PROFILES, SEED_REQUESTS, SEED_WALIS } from './seed'
 import { fetchAll, remote, subscribeAll } from './remote';
 import { isLive } from './supabase';
 import {
-  Actor, MatchRequest, MeetIntent, Message, Profile, Wali, WaliNotify,
+  Actor, Request, MeetIntent, Message, Profile, Wali, WaliNotify,
 } from './types';
 
 let seq = 0;
@@ -14,7 +14,7 @@ const uid = (p: string) => `${p}${Date.now().toString(36)}${(seq++).toString(36)
 interface Ctx {
   profiles: Profile[];
   walis: Wali[];
-  requests: MatchRequest[];
+  requests: Request[];
   messages: Message[];
   meets: MeetIntent[];
   actor: Actor;
@@ -29,7 +29,7 @@ interface Ctx {
   setActor: (a: Actor) => void;
   profile: (id: string) => Profile | undefined;
   wali: (id: string) => Wali | undefined;
-  request: (id: string) => MatchRequest | undefined;
+  request: (id: string) => Request | undefined;
 
   addProfile: (p: Omit<Profile, 'id'>) => string;
   addWali: (w: Omit<Wali, 'id'>) => string;
@@ -43,10 +43,10 @@ interface Ctx {
   confirmMeet: (requestId: string, by: string) => void;
   meetFor: (requestId: string) => MeetIntent | undefined;
 
-  threadsFor: (actor: Actor) => MatchRequest[];
-  inboxFor: (actor: Actor) => MatchRequest[];
+  threadsFor: (actor: Actor) => Request[];
+  inboxFor: (actor: Actor) => Request[];
   lastMessage: (requestId: string) => Message | undefined;
-  counterpart: (r: MatchRequest, actor: Actor) => Profile | undefined;
+  counterpart: (r: Request, actor: Actor) => Profile | undefined;
 
   waliNotify: WaliNotify;
   setWaliNotify: (m: WaliNotify) => void;
@@ -64,7 +64,7 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
   // be replaced, so start empty and let `loading` cover the gap.
   const [profiles, setProfiles] = useState<Profile[]>(isLive ? [] : SEED_PROFILES);
   const [walis, setWalis] = useState<Wali[]>(isLive ? [] : SEED_WALIS);
-  const [requests, setRequests] = useState<MatchRequest[]>(isLive ? [] : SEED_REQUESTS);
+  const [requests, setRequests] = useState<Request[]>(isLive ? [] : SEED_REQUESTS);
   const [messages, setMessages] = useState<Message[]>(isLive ? [] : SEED_MESSAGES);
   const [meets, setMeets] = useState<MeetIntent[]>([]);
   const [loading, setLoading] = useState(isLive);
@@ -151,7 +151,7 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
   const sendRequest: Ctx['sendRequest'] = useCallback((manId, womanId, note) => {
     const woman = snap.current.profiles.find((p) => p.id === womanId);
     if (!woman?.waliId) return; // no wali attached => profile is not active
-    const r: MatchRequest = {
+    const r: Request = {
       id: uid('r'), manId, womanId, waliId: woman.waliId,
       status: 'pending_wali', note, createdAt: Date.now(),
     };
