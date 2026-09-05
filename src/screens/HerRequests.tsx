@@ -22,7 +22,7 @@ export default function HerRequests() {
         <Pill label="Your decision" icon="heart-outline" />
         <Text style={styles.intro}>
           {g ? `${g.name} (${g.relationship.toLowerCase()})` : 'Your wali'} screens every request
-          before you see it. What reaches this screen has passed him — the decision from here is
+          before you see it. What reaches this screen has passed him. The decision from here is
           yours alone.
         </Text>
       </Card>

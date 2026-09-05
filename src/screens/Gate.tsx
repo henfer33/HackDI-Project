@@ -18,7 +18,7 @@ export function GateTrail({ status, waliName, herName }: {
     status === 'declined_wali' ? 0 : status === 'declined_woman' ? 1 : -1;
   const reached = ORDER.indexOf(status);
 
-  // "You reviews" — the subject is sometimes the viewer, so the verb has to agree.
+  // "You reviews": the subject is sometimes the viewer, so the verb has to agree.
   const verb = (subject: string, third: string, first: string) =>
     subject === 'You' ? first : third;
 

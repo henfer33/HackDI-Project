@@ -13,7 +13,7 @@ export interface Profile {
   career: string;
   timeline: Timeline;
   about: string;
-  waliId?: string; // women only — profile is inactive without it
+  waliId?: string; // women only; profile is inactive without it
   /** Women only. Lets her wali write in her chats; he can always read either way. */
   waliMaySend?: boolean;
 }
@@ -28,7 +28,7 @@ export interface Wali {
 
 /**
  * Request lifecycle. The wali gates first, then the woman consents.
- * Her consent is a condition of the marriage in fiqh — the wali facilitates,
+ * Her consent is a condition of the marriage in fiqh. The wali facilitates,
  * he does not decide for her. Both gates are required to open a chat.
  */
 export type RequestStatus =

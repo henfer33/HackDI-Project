@@ -31,7 +31,7 @@ export default function TabsLayout() {
       <Tabs.Screen
         name="home"
         options={{
-          // Count lives in the label — a floating badge needs a circle to read
+          // Count lives in the label; a floating badge needs a circle to read
           // as a badge, and there are no circles left in the app.
           title: inbox ? `${homeLabel} (${inbox})` : homeLabel,
           tabBarIcon: ({ color, size }) => (

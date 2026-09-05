@@ -217,7 +217,7 @@ export function OfflineBanner() {
     <View style={styles.offline}>
       <Ionicons name="cloud-offline-outline" size={15} color={C.gold} />
       <Text style={styles.offlineText}>
-        Offline — showing the last data received. Changes will not sync.
+        Offline. Showing the last data received. Changes will not sync.
       </Text>
     </View>
   );

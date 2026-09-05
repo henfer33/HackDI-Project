@@ -16,7 +16,7 @@ const PILLARS = [
   {
     icon: 'heart-outline' as const,
     title: 'Her word is her own',
-    body: 'A guardian facilitates; he cannot accept on her behalf. Approval passes a request to her — the answer is hers.',
+    body: 'A guardian facilitates; he cannot accept on her behalf. Approval passes a request to her. The answer is hers.',
   },
   {
     icon: 'eye-outline' as const,
@@ -25,13 +25,6 @@ const PILLARS = [
   },
 ];
 
-const STEPS = [
-  'He sends a request. It never lands in her inbox first.',
-  'Her wali reviews it and approves or declines.',
-  'She accepts or declines for herself.',
-  'A conversation opens, with her wali present.',
-  'When both are ready to meet, we hand over to the family.',
-];
 
 export default function Landing() {
   const router = useRouter();
@@ -53,7 +46,7 @@ export default function Landing() {
               Marriage, with the wali in the room.
             </Text>
             <Text style={styles.lede}>
-              A place for Muslims in the West to marry with their family beside them — not a dating
+              A place for Muslims in the West to marry with their family beside them, not a dating
               app with a guardian bolted on the side.
             </Text>
 
@@ -84,17 +77,6 @@ export default function Landing() {
 
             <View style={styles.rule} />
 
-            {/* Flow */}
-            <Text style={styles.kicker}>How a match happens</Text>
-            {STEPS.map((t, i) => (
-              <View key={i} style={styles.step}>
-                <Text style={styles.stepNum}>{String(i + 1).padStart(2, '0')}</Text>
-                <Text style={styles.stepText}>{t}</Text>
-              </View>
-            ))}
-
-            <View style={styles.rule} />
-
             {/* Trust */}
             <View style={styles.kyc}>
               <View style={styles.kycHead}>
@@ -102,7 +84,7 @@ export default function Landing() {
                 <Text style={styles.kycTitle}>Everyone is verified</Text>
               </View>
               <Text style={styles.kycBody}>
-                Identity verification is required of every account before it goes live — suitors,
+                Identity verification is required of every account before it goes live: suitors,
                 women and walis alike. No anonymous profiles, and no guardian nobody can vouch for.
               </Text>
             </View>
@@ -147,9 +129,6 @@ const styles = StyleSheet.create({
   pillar: { flexDirection: 'row', gap: 15, marginBottom: 28, alignItems: 'flex-start' },
   pillarTitle: { fontFamily: F.displayBold, fontSize: 21, color: C.cream, lineHeight: 27 },
   pillarBody: { fontFamily: F.sans, fontSize: 14.5, color: C.muted, lineHeight: 22, marginTop: 6 },
-  step: { flexDirection: 'row', gap: 16, marginBottom: 20, alignItems: 'flex-start' },
-  stepNum: { fontFamily: F.displayBold, fontSize: 15, color: C.mint, width: 26, marginTop: 1 },
-  stepText: { flex: 1, fontFamily: F.sans, fontSize: 15, color: C.cream, lineHeight: 23 },
   kyc: { borderWidth: 1, borderColor: C.goldEdge, borderRadius: S.radius, padding: 22 },
   kycHead: { flexDirection: 'row', alignItems: 'center', gap: 10, marginBottom: 12 },
   kycTitle: { fontFamily: F.displayBold, fontSize: 20, color: C.gold },

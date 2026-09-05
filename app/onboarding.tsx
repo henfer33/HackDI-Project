@@ -108,7 +108,7 @@ export default function Onboarding() {
         <Card tone="gold">
           <SectionLabel>Your wali</SectionLabel>
           <Text style={styles.help}>
-            Required. Your profile is not visible to anyone until a wali is attached — this is not a
+            Required. Your profile is not visible to anyone until a wali is attached. This is not a
             setting that can be turned off.
           </Text>
           <TextInput

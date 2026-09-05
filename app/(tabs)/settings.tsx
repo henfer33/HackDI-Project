@@ -31,7 +31,7 @@ export default function Settings() {
     }
   };
 
-  // Wipes every request, message and conversation — shared, and irreversible.
+  // Wipes every request, message and conversation. Shared, and irreversible.
   const confirmReset = () => {
     const msg = 'This clears every request, conversation and message for everyone. It cannot be undone.';
     if (Platform.OS === 'web') {
@@ -48,7 +48,7 @@ export default function Settings() {
   const [hideFromCommunity, setHideFromCommunity] = useState(false);
 
   // These are absent while the first fetch is in flight, and stay absent if the
-  // demo rows were deleted — so no non-null assertions here.
+  // demo rows were deleted, so no non-null assertions here.
   const man = profiles.find((p) => p.id === 'm1');
   const woman = profiles.find((p) => p.id === 'w1');
   const guardian = walis.find((w) => w.id === 'g1');
@@ -112,7 +112,7 @@ export default function Settings() {
           <Text style={styles.lockNote}>
             Yours to decide. Off, {myWali?.name.split(' ')[0] ?? 'he'} reads your conversations
             without writing in them. On, he can speak in them too. Either way he always sees
-            everything — that part is not a setting.
+            everything. That part is not a setting.
           </Text>
         </>
       )}

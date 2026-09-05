@@ -33,7 +33,7 @@ const digits = (s: string) => s.replace(/[^\d+]/g, '');
 
 /**
  * Opens the phone's own Messages or Mail composer, pre-filled and addressed.
- * Nothing is sent until the person taps send — no gateway, no API key, and no
+ * Nothing is sent until the person taps send. No gateway, no API key, and no
  * message leaves the device behind their back.
  */
 export async function notifyWali(
@@ -68,6 +68,6 @@ export function requestMessage(waliName: string, wardName: string, suitorName?: 
   return (
     `Assalamu alaikum ${waliName}, ` +
     `${who} sent a marriage request for ${wardName} on Khitbah. ` +
-    `It is waiting for your review — nothing reaches ${wardName.split(' ')[0]} until you approve it.`
+    `It is waiting for your review. Nothing reaches ${wardName.split(' ')[0]} until you approve it.`
   );
 }

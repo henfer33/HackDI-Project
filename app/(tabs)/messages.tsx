@@ -75,7 +75,7 @@ export default function Messages() {
 }
 
 const styles = StyleSheet.create({
-  // Just the initial — no ring, no fill.
+  // Just the initial: no ring, no fill.
   avatar: { width: 40, alignItems: 'center', justifyContent: 'center' },
   avatarText: { fontFamily: F.display, fontSize: 28, color: C.mint },
   name: { fontFamily: F.display, fontSize: 21, color: C.cream },

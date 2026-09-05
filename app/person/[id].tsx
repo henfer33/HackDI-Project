@@ -52,7 +52,7 @@ export default function Person() {
           <Card>
             <Text style={styles.help}>
               This goes to {g ? g.name : 'her wali'} by {waliNotify === 'app' ? 'in-app notice' : waliNotify}.
-              {' '}{first} will not see it unless he approves — and she then decides for herself.
+              {' '}{first} will not see it unless he approves, and she then decides for herself.
             </Text>
             <TextInput
               style={styles.input}

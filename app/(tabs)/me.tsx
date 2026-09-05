@@ -41,7 +41,7 @@ export default function Me() {
           <Card tone="gold">
             <Pill label="Wali" tone="gold" icon="shield-checkmark" />
             <Field label="Contact on file" value={g.contact} />
-            <Field label="Under your care" value={ward?.name ?? '—'} />
+            <Field label="Under your care" value={ward?.name ?? 'Not set'} />
             <Text style={styles.note}>
               Self-attested for this build. Verifying that a wali really is her guardian is on the
               roadmap, not in the MVP.
@@ -78,7 +78,7 @@ export default function Me() {
                     </Text>
                   </>
                 ) : (
-                  <Text style={styles.note}>No wali attached — your profile is not visible.</Text>
+                  <Text style={styles.note}>No wali attached. Your profile is not visible.</Text>
                 )}
               </Card>
             </>

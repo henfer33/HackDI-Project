@@ -3,7 +3,7 @@
  * green rather than near-black, with IBM Plex throughout.
  */
 export const C = {
-  // grounds — lighter than the first pass
+  // grounds, lighter than the first pass
   bg: '#12352A',
   bgTop: '#1B4A38',
   sheet: '#1E5240',

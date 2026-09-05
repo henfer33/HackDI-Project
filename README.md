@@ -18,7 +18,7 @@ Scan the QR code with Expo Go, or press `w` for the browser.
 
 ## Backend
 
-`supabase/schema.sql` is the whole thing — paste it into the Supabase SQL editor.
+`supabase/schema.sql` is the whole thing. Paste it into the Supabase SQL editor.
 There is no auth: each client picks a role at launch, which keeps a login screen out
 of a three-minute demo. The access policies are consequently wide open and marked
 DEMO ONLY in the file.
@@ -64,14 +64,14 @@ man sends request
 Two things worth being explicit about:
 
 **Her consent is a separate gate.** The wali screens the request; he does not decide
-for her. In fiqh a woman's consent is a condition of the marriage — a wali facilitates,
+for her. In fiqh a woman's consent is a condition of the marriage. A wali facilitates,
 he cannot compel. An app that let him accept on her behalf would be less compliant than
 the mainstream apps it is competing with, not more.
 
 **The wali always reads. Whether he writes is hers to decide.** He sees every message
 in a chat he is party to, and that is not configurable. Whether he can also send
 messages is a single switch on her settings, shown to no one else and scoped to her
-alone. Both halves are enforced in `src/store.tsx` rather than the UI — `sendMessage`
+alone. Both halves are enforced in `src/store.tsx` rather than the UI: `sendMessage`
 rejects the wali unless that woman has enabled it.
 
 **Everyone party to a chat can reach it.** The suitor, the woman and the wali each
@@ -84,7 +84,7 @@ app/
   _layout.tsx        root stack, font loading, provider
   (tabs)/
     _layout.tsx      bottom tabs; labels and badges follow the current role
-    index.tsx        one tab, three faces — Find / Requests / Review
+    home.tsx         one tab, three faces: Find / Requests / Review
     messages.tsx     conversations for whoever is viewing
     me.tsx           own profile; the wali sees his ward instead
     settings.tsx     role switcher, locked guardianship rows, wali notify method
@@ -109,7 +109,7 @@ Settings → "Viewing as" switches between Yusuf (suitor), Maryam (woman) and Im
 (wali) so the whole flow runs on one device. The tab bar relabels itself per role and
 badges the pending count. "Reset demo data" clears everything.
 
-Wali oversight and her consent are not settings at all — they are the flow, with no
+Wali oversight and her consent are not settings at all. They are the flow, with no
 UI to turn them off. The one guardianship control that exists, **Wali can send
 messages**, belongs to the woman and appears only in her settings.
 
@@ -124,5 +124,5 @@ console without tapping through screens.
 Payments, video calling, wali identity verification, religiosity filters or
 verification, photo blur/reveal, selfie verification. All post-hackathon.
 
-Religiosity is not filtered or verified anywhere by design — that is between the
+Religiosity is not filtered or verified anywhere by design. That is between the
 individual and Allah.

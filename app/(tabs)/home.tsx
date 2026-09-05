@@ -4,7 +4,7 @@ import Browse from '../../src/screens/Browse';
 import HerRequests from '../../src/screens/HerRequests';
 import WaliInbox from '../../src/screens/WaliInbox';
 
-/** One tab, three faces — whichever role the viewer is in. */
+/** One tab, three faces, whichever role the viewer is in. */
 export default function Home() {
   const { actor } = useApp();
   return (
