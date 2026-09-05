@@ -1,5 +1,5 @@
 import { Ionicons } from '@expo/vector-icons';
-import { useLocalSearchParams } from 'expo-router';
+import { useLocalSearchParams, useRouter } from 'expo-router';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useRef, useState } from 'react';
 import {
@@ -19,6 +19,7 @@ export default function Chat() {
     sendMessage, proposeMeet, confirmMeet, meetFor,
   } = useApp();
 
+  const router = useRouter();
   const r = request(requestId);
   const [draft, setDraft] = useState('');
   const scroller = useRef<ScrollView>(null);
@@ -52,20 +53,27 @@ export default function Chat() {
       <KeyboardAvoidingView
         style={styles.fill}
         behavior={Platform.OS === 'ios' ? 'padding' : undefined}
-        keyboardVerticalOffset={92}>
-        <View style={styles.banner}>
-          <Ionicons name="shield-checkmark" size={15} color={C.gold} />
-          <Text style={styles.bannerText}>
-            {man?.name.split(' ')[0]} · {woman?.name.split(' ')[0]} · {g?.name.split(' ')[0]}
-          </Text>
-          <Pill label={readOnly ? 'Read-only' : isWali ? 'You may write' : 'Wali is reading'} tone="gold" />
-        </View>
+        keyboardVerticalOffset={0}>
+        <SafeAreaView edges={['top']}>
+          <View style={styles.banner}>
+            <Pressable onPress={() => router.back()} hitSlop={12} style={{ marginRight: 2 }}>
+              <Ionicons name="chevron-back" size={22} color={C.mint} />
+            </Pressable>
+            <Ionicons name="shield-checkmark" size={15} color={C.gold} />
+            <Text style={styles.bannerText}>
+              {man?.name.split(' ')[0]} · {woman?.name.split(' ')[0]} · {g?.name.split(' ')[0]}
+            </Text>
+            <Pill label={readOnly ? 'Read-only' : isWali ? 'You may write' : 'Wali is reading'} tone="gold" />
+          </View>
+        </SafeAreaView>
 
         <ScrollView
           ref={scroller}
           style={styles.fill}
           contentContainerStyle={{ padding: S.pad, paddingBottom: 12 }}
           onContentSizeChange={() => scroller.current?.scrollToEnd({ animated: false })}
+          keyboardShouldPersistTaps="handled"
+          keyboardDismissMode="interactive"
           showsVerticalScrollIndicator={false}>
           <View style={styles.adab}>
             <Ionicons name="leaf-outline" size={14} color={C.mint} />

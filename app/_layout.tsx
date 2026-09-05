@@ -32,7 +32,9 @@ export default function RootLayout() {
         }}>
         <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
         <Stack.Screen name="person/[id]" options={{ title: '' }} />
-        <Stack.Screen name="chat/[id]" options={{ title: '' }} />
+        {/* The chat draws its own banner and back control, so the composer has
+            no stack header to offset past when the keyboard opens. */}
+        <Stack.Screen name="chat/[id]" options={{ headerShown: false }} />
         <Stack.Screen name="onboarding" options={{ title: 'Create profile' }} />
       </Stack>
     </AppProvider>

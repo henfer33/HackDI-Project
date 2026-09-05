@@ -2,7 +2,8 @@ import { Ionicons } from '@expo/vector-icons';
 import { LinearGradient } from 'expo-linear-gradient';
 import React from 'react';
 import {
-  Pressable, ScrollView, StyleSheet, Text, TextStyle, View, ViewStyle,
+  KeyboardAvoidingView, Platform, Pressable, ScrollView,
+  StyleSheet, Text, TextStyle, View, ViewStyle,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { C, F, S, eyebrow } from './theme';
@@ -18,7 +19,14 @@ export function Screen({
   const body = scroll ? (
     <ScrollView
       contentContainerStyle={{ padding: S.pad, paddingBottom: 46 }}
-      showsVerticalScrollIndicator={false}>
+      showsVerticalScrollIndicator={false}
+      // Lets a tap on a button register while the keyboard is open, instead of
+      // being swallowed by the dismiss.
+      keyboardShouldPersistTaps="handled"
+      keyboardDismissMode="interactive"
+      // iOS: insets the scroll view by the keyboard so a field low on the page
+      // scrolls into view rather than sitting behind it.
+      automaticallyAdjustKeyboardInsets>
       {children}
     </ScrollView>
   ) : (
@@ -27,7 +35,15 @@ export function Screen({
   return (
     <LinearGradient colors={[C.bgTop, C.bg]} locations={[0, 0.55]} style={{ flex: 1 }}>
       <SafeAreaView style={{ flex: 1 }} edges={edges}>
-        {body}
+        {/* iOS is handled by automaticallyAdjustKeyboardInsets above; Android
+            needs the view itself to shrink. */}
+        {Platform.OS === 'android' ? (
+          <KeyboardAvoidingView style={{ flex: 1 }} behavior="height">
+            {body}
+          </KeyboardAvoidingView>
+        ) : (
+          body
+        )}
       </SafeAreaView>
     </LinearGradient>
   );
