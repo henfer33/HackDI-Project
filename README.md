@@ -3,16 +3,37 @@
 A Sharia-compliant marriage app for the Western Muslim diaspora, where the wali is
 structural rather than a toggle.
 
-Hackathon MVP. React Native (Expo), in-memory state, no backend.
+Hackathon MVP. React Native (Expo) with a Supabase backend, or in-memory state
+when no backend is configured.
 
 ## Running it
 
 ```bash
 npm install
+cp .env.example .env    # fill in your Supabase URL and publishable key
 npx expo start
 ```
 
 Scan the QR code with Expo Go, or press `w` for the browser.
+
+## Backend
+
+`supabase/schema.sql` is the whole thing — paste it into the Supabase SQL editor.
+There is no auth: each client picks a role at launch, which keeps a login screen out
+of a three-minute demo. The access policies are consequently wide open and marked
+DEMO ONLY in the file.
+
+Because there is no auth, the two gates and the wali's write permission are enforced
+in `src/store.tsx` on the client. Anyone holding the publishable key could bypass
+them by talking to the REST API directly. That is acceptable for seeded demo data and
+is the first thing to fix if this ever holds anything real.
+
+**It degrades rather than dies.** With no credentials in `.env` the app runs entirely
+in memory on seeded data, so a dead venue wifi costs you multi-device sync and
+nothing else. `live` and `offline` on the store say which mode you are in.
+
+Realtime propagation is what makes the multi-device demo work: three clients open,
+the wali taps Approve, and her screen updates without a refresh.
 
 ## The flow
 
