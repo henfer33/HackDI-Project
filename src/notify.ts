@@ -1,4 +1,5 @@
 import { Linking, Platform } from 'react-native';
+import { supabase } from './supabase';
 import { Wali, WaliNotify } from './types';
 
 const EMAIL = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
@@ -31,6 +32,39 @@ export function channelFor(contact: string, preferred: WaliNotify): WaliNotify {
 
 const digits = (s: string) => s.replace(/[^\d+]/g, '');
 
+export type SendPath = 'server' | 'composer';
+export interface SendResult {
+  ok: boolean;
+  channel: WaliNotify;
+  path?: SendPath;
+  reason?: string;
+}
+
+/**
+ * Asks the Edge Function to send it for real. Returns null when there is no
+ * backend or no provider configured, so the caller can fall back.
+ */
+async function sendViaServer(
+  channel: 'sms' | 'email',
+  to: string,
+  subject: string,
+  message: string,
+): Promise<SendResult | null> {
+  if (!supabase) return null;
+  try {
+    const { data, error } = await supabase.functions.invoke('notify-wali', {
+      body: { channel, to, subject, message },
+    });
+    // Function missing, or the provider keys are not set: fall back quietly.
+    if (error && !data) return null;
+    if (data?.reason === 'unconfigured') return null;
+    if (data?.ok) return { ok: true, channel, path: 'server' };
+    return { ok: false, channel, path: 'server', reason: data?.detail ?? 'The sender rejected it.' };
+  } catch {
+    return null;
+  }
+}
+
 /**
  * Opens the phone's own Messages or Mail composer, pre-filled and addressed.
  * Nothing is sent until the person taps send. No gateway, no API key, and no
@@ -41,11 +75,16 @@ export async function notifyWali(
   preferred: WaliNotify,
   subject: string,
   body: string,
-): Promise<{ ok: boolean; channel: WaliNotify; reason?: string }> {
+): Promise<SendResult> {
   const channel = channelFor(wali.contact, preferred);
   if (channel === 'app') {
     return { ok: false, channel, reason: 'This wali has no phone or email on file.' };
   }
+
+  // Send it properly if a provider is wired up. Only if that is unavailable do
+  // we hand the message to the person's own Messages or Mail app.
+  const server = await sendViaServer(channel, wali.contact.trim(), subject, body);
+  if (server) return server;
 
   const url =
     channel === 'sms'
@@ -55,11 +94,13 @@ export async function notifyWali(
 
   try {
     const supported = await Linking.canOpenURL(url);
-    if (!supported) return { ok: false, channel, reason: 'This device cannot open that composer.' };
+    if (!supported) {
+      return { ok: false, channel, path: 'composer', reason: 'This device cannot open that composer.' };
+    }
     await Linking.openURL(url);
-    return { ok: true, channel };
+    return { ok: true, channel, path: 'composer' };
   } catch {
-    return { ok: false, channel, reason: 'Could not open the composer.' };
+    return { ok: false, channel, path: 'composer', reason: 'Could not open the composer.' };
   }
 }
 

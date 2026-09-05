@@ -20,14 +20,27 @@ export default function Settings() {
 
   const kind = myWali ? contactKind(myWali.contact) : 'invalid';
 
+  const [sending, setSending] = useState(false);
+
+  const say = (title: string, msg: string) => {
+    if (Platform.OS === 'web') window.alert(`${title}\n\n${msg}`);
+    else Alert.alert(title, msg);
+  };
+
   const sendNotice = async () => {
-    if (!myWali || !me) return;
-    const body = requestMessage(myWali.name, me.name);
-    const res = await notifyWali(myWali, waliNotify, 'A request on Khitbah', body);
-    if (!res.ok) {
-      const msg = res.reason ?? 'Could not open the composer.';
-      if (Platform.OS === 'web') window.alert(msg);
-      else Alert.alert('Could not send', msg);
+    if (!myWali || !me || sending) return;
+    setSending(true);
+    try {
+      const body = requestMessage(myWali.name, me.name);
+      const res = await notifyWali(myWali, waliNotify, 'A request on Khitbah', body);
+      if (res.ok && res.path === 'server') {
+        say('Sent', `${myWali.name} has been notified by ${res.channel === 'email' ? 'email' : 'SMS'}.`);
+      } else if (!res.ok) {
+        say('Could not send', res.reason ?? 'Something went wrong.');
+      }
+      // The composer path opens the mail or messages app, which is its own feedback.
+    } finally {
+      setSending(false);
     }
   };
 
@@ -150,14 +163,15 @@ export default function Settings() {
             </Text>
             <View style={{ height: 12 }} />
             <Button
-              title={`Notify ${myWali.name.split(' ')[0]} now`}
+              title={sending ? 'Sending' : `Notify ${myWali.name.split(' ')[0]} now`}
               icon={kind === 'email' ? 'mail-outline' : 'chatbubble-outline'}
               tone="ghost"
-              disabled={kind === 'invalid'}
+              disabled={kind === 'invalid' || sending}
               onPress={sendNotice}
             />
             <Text style={styles.channelNote}>
-              Opens your own Messages or Mail app with the message ready. Nothing sends until you tap send.
+              Sent for you when a provider is configured. Otherwise this opens your own Messages or
+              Mail app with the text ready, and nothing leaves until you tap send.
             </Text>
           </>
         )}

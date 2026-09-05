@@ -18,6 +18,12 @@ Scan the QR code with Expo Go, or press `w` for the browser.
 
 ## Backend
 
+Notifications to a wali go out by SMS or email through a Supabase Edge Function
+(`supabase/functions/notify-wali`), so the provider keys stay off the device.
+Without it configured the app opens the phone's own Messages or Mail composer
+instead. See `supabase/README.md` for deployment.
+
+
 `supabase/schema.sql` is the whole thing. Paste it into the Supabase SQL editor.
 There is no auth: each client picks a role at launch, which keeps a login screen out
 of a three-minute demo. The access policies are consequently wide open and marked
