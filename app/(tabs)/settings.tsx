@@ -6,7 +6,7 @@ import { useApp } from '../../src/store';
 import { C, F, S } from '../../src/theme';
 import { Button, Card, Loading, PageTitle, Pill, Row, Screen, SectionLabel, Toggle } from '../../src/ui';
 import { Actor, WaliNotify } from '../../src/types';
-import { channelFor, contactKind, notifyWali, requestMessage } from '../../src/notify';
+import { channelFor, contactKind, notifyWali, requestHtml, requestMessage, requestSms } from '../../src/notify';
 
 export default function Settings() {
   const router = useRouter();
@@ -32,8 +32,14 @@ export default function Settings() {
     if (!myWali || !me || sending) return;
     setSending(true);
     try {
-      const body = requestMessage(myWali.name, me.name);
-      const res = await notifyWali(myWali, waliNotify, 'A request on Khitbah', body);
+      const isEmail = kind === 'email';
+      const body = isEmail
+        ? requestMessage(myWali.name, me.name)
+        : requestSms(myWali.name, me.name);
+      const html = isEmail ? requestHtml(myWali.name, me.name) : undefined;
+      const res = await notifyWali(
+        myWali, waliNotify, `A request is waiting for your review`, body, html,
+      );
       if (res.ok && (res.path === 'server' || res.path === 'apify')) {
         say('Sent', `${myWali.name} has been notified by ${res.channel === 'email' ? 'email' : 'SMS'}.`);
       } else if (!res.ok) {

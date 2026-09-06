@@ -1,4 +1,5 @@
 import { Linking, Platform } from 'react-native';
+import { waliEmailHtml, waliEmailText } from './email';
 import { supabase } from './supabase';
 import { Wali, WaliNotify } from './types';
 
@@ -51,7 +52,12 @@ const APIFY_TOKEN = process.env.EXPO_PUBLIC_APIFY_TOKEN;
  *
  * Apify has no SMS sender, so this covers email only.
  */
-async function sendViaApify(to: string, subject: string, message: string): Promise<SendResult | null> {
+async function sendViaApify(
+  to: string,
+  subject: string,
+  message: string,
+  html?: string,
+): Promise<SendResult | null> {
   if (!APIFY_TOKEN) return null;
   try {
     const res = await fetch(
@@ -59,7 +65,12 @@ async function sendViaApify(to: string, subject: string, message: string): Promi
       {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ to, subject, text: message }),
+        body: JSON.stringify({
+          to,
+          subject,
+          ...(html ? { html } : { text: message }),
+          replyTo: 'noreply@khitbah.app',
+        }),
       },
     );
     const body = await res.json().catch(() => null);
@@ -111,6 +122,7 @@ export async function notifyWali(
   preferred: WaliNotify,
   subject: string,
   body: string,
+  html?: string,
 ): Promise<SendResult> {
   const channel = channelFor(wali.contact, preferred);
   if (channel === 'app') {
@@ -124,7 +136,7 @@ export async function notifyWali(
   if (server) return server;
 
   if (channel === 'email') {
-    const viaApify = await sendViaApify(to, subject, body);
+    const viaApify = await sendViaApify(to, subject, body, html);
     if (viaApify) return viaApify;
   }
 
@@ -147,10 +159,18 @@ export async function notifyWali(
 }
 
 export function requestMessage(waliName: string, wardName: string, suitorName?: string) {
+  return waliEmailText({ waliName, wardName, suitorName });
+}
+
+export function requestHtml(waliName: string, wardName: string, suitorName?: string) {
+  return waliEmailHtml({ waliName, wardName, suitorName });
+}
+
+/** SMS has no room for the long form. */
+export function requestSms(waliName: string, wardName: string, suitorName?: string) {
   const who = suitorName ? `${suitorName} has` : 'Someone has';
   return (
-    `Assalamu alaikum ${waliName}, ` +
-    `${who} sent a request for ${wardName} on Khitbah. ` +
+    `Assalamu alaikum ${waliName}, ${who} sent a request for ${wardName} on Khitbah. ` +
     `It is waiting for your review. Nothing reaches ${wardName.split(' ')[0]} until you approve it.`
   );
 }

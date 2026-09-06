@@ -138,8 +138,15 @@ export const SEED_PROFILES: Profile[] = [
   },
 ];
 
+/**
+ * Demo escape hatch. Set EXPO_PUBLIC_DEMO_WALI_EMAIL in .env (gitignored) and
+ * Maryam's wali is reachable at that address, so the email can be sent on stage
+ * without editing anything live or committing a real address to the repo.
+ */
+const demoWaliContact = process.env.EXPO_PUBLIC_DEMO_WALI_EMAIL || '+44 7700 900321';
+
 export const SEED_WALIS: Wali[] = [
-  { id: 'g1', name: 'Imran Siddiqui', relationship: 'Father', contact: '+44 7700 900321', wardId: 'w1' },
+  { id: 'g1', name: 'Imran Siddiqui', relationship: 'Father', contact: demoWaliContact, wardId: 'w1' },
   { id: 'g2', name: 'Bilal Rahman', relationship: 'Brother', contact: 'bilal.rahman@example.com', wardId: 'w2' },
   { id: 'g3', name: 'Abdi Osman', relationship: 'Father', contact: '+1 416 555 0142', wardId: 'w3' },
   { id: 'g4', name: 'Tariq Malik', relationship: 'Uncle', contact: '+44 7700 900884', wardId: 'w4' },
