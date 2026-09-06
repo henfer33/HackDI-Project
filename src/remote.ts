@@ -6,6 +6,7 @@ const toProfile = (r: any): Profile => ({
   id: r.id, role: r.role, name: r.name, age: r.age, location: r.location,
   education: r.education, career: r.career, timeline: r.timeline, about: r.about,
   email: r.email ?? '',
+  photo: r.photo ?? undefined,
   waliId: r.wali_id ?? undefined, waliMaySend: r.wali_may_send ?? false,
 });
 const toWali = (r: any): Wali => ({

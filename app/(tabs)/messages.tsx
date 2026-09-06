@@ -2,7 +2,7 @@ import { useRouter } from 'expo-router';
 import { StyleSheet, Text, View } from 'react-native';
 import { useApp } from '../../src/store';
 import { C, F } from '../../src/theme';
-import { Card, Empty, Loading, PageTitle, Pill, Screen, SectionLabel } from '../../src/ui';
+import { Avatar, Card, Empty, Loading, PageTitle, Pill, Screen, SectionLabel } from '../../src/ui';
 
 /**
  * Conversations for whoever is viewing. The suitor and the woman each reach
@@ -45,9 +45,7 @@ export default function Messages() {
         return (
           <Card key={r.id} onPress={() => router.push(`/chat/${r.id}`)}>
             <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-              <View style={styles.avatar}>
-                <Text style={styles.avatarText}>{other?.name.charAt(0)}</Text>
-              </View>
+              <Avatar name={other?.name ?? ''} photo={other?.photo} size={48} />
               <View style={{ flex: 1, marginLeft: 13 }}>
                 <Text style={styles.name}>{other?.name}</Text>
                 <Text style={styles.preview} numberOfLines={1}>
@@ -75,9 +73,6 @@ export default function Messages() {
 }
 
 const styles = StyleSheet.create({
-  // Just the initial: no ring, no fill.
-  avatar: { width: 40, alignItems: 'center', justifyContent: 'center' },
-  avatarText: { fontFamily: F.display, fontSize: 28, color: C.mint },
   name: { fontFamily: F.display, fontSize: 21, color: C.cream },
   preview: { fontFamily: F.sans, fontSize: 13.5, color: C.muted, marginTop: 3 },
   pills: { flexDirection: 'row', columnGap: 18, rowGap: 8, marginTop: 14, flexWrap: 'wrap' },

@@ -1,7 +1,7 @@
 import { StyleSheet, Text, View } from 'react-native';
 import { useApp } from '../store';
 import { C, F } from '../theme';
-import { Button, Card, Empty, Field, PageTitle, Pill, SectionLabel } from '../ui';
+import { Avatar, Button, Card, Empty, Field, PageTitle, Pill, SectionLabel } from '../ui';
 import { GateTrail } from './Gate';
 
 export default function HerRequests() {
@@ -35,8 +35,13 @@ export default function HerRequests() {
         if (!m) return null;
         return (
           <Card key={r.id}>
-            <Text style={styles.name}>{m.name}</Text>
-            <Text style={styles.sub}>{m.age} · {m.location}</Text>
+            <View style={{ flexDirection: 'row', alignItems: 'center', gap: 14 }}>
+              <Avatar name={m.name} photo={m.photo} size={56} />
+              <View style={{ flex: 1 }}>
+                <Text style={styles.name}>{m.name}</Text>
+                <Text style={styles.sub}>{m.age} · {m.location}</Text>
+              </View>
+            </View>
             <View style={{ height: 14 }} />
             <Field label="Education" value={m.education} />
             <Field label="Career" value={m.career} />

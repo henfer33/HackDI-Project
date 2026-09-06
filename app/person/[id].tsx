@@ -3,7 +3,7 @@ import { useState } from 'react';
 import { StyleSheet, Text, TextInput, View } from 'react-native';
 import { useApp } from '../../src/store';
 import { C, F, S } from '../../src/theme';
-import { Button, Card, Field, Pill, Screen, ScreenHeader, SectionLabel } from '../../src/ui';
+import { Avatar, Button, Card, Field, Pill, Screen, ScreenHeader, SectionLabel } from '../../src/ui';
 import { GateTrail } from '../../src/screens/Gate';
 
 export default function Person() {
@@ -22,6 +22,11 @@ export default function Person() {
 
   return (
     <Screen edges={[]}>
+      {!!p.photo && (
+        <View style={{ alignItems: 'center', marginBottom: 4 }}>
+          <Avatar name={p.name} photo={p.photo} size={92} />
+        </View>
+      )}
       <ScreenHeader
         eyebrow="Seeking marriage"
         icon="leaf"

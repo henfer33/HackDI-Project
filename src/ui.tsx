@@ -1,8 +1,9 @@
 import { Ionicons } from '@expo/vector-icons';
 import { LinearGradient } from 'expo-linear-gradient';
 import React from 'react';
+import { useState } from 'react';
 import {
-  ActivityIndicator, KeyboardAvoidingView, Platform, Pressable, ScrollView,
+  ActivityIndicator, Image, KeyboardAvoidingView, Platform, Pressable, ScrollView,
   StyleSheet, Text, TextStyle, View, ViewStyle,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -161,6 +162,39 @@ export function Pill({
     <View style={styles.pill}>
       {icon && <Ionicons name={icon} size={12} color={map.fg} />}
       <Text style={[styles.pillText, { color: map.fg }]}>{label}</Text>
+    </View>
+  );
+}
+
+/**
+ * A photo when the profile has one, the initial otherwise. Women's profiles
+ * carry no photo by design, so the initial is the normal case, not a fallback.
+ * Also falls back if the image fails, so a dead network shows a letter rather
+ * than a broken box.
+ */
+export function Avatar({
+  name, photo, size = 48,
+}: {
+  name: string;
+  photo?: string;
+  size?: number;
+}) {
+  const [failed, setFailed] = useState(false);
+  const initial = (name || '?').trim().charAt(0).toUpperCase();
+
+  if (photo && !failed) {
+    return (
+      <Image
+        source={{ uri: photo }}
+        onError={() => setFailed(true)}
+        style={{ width: size, height: size, borderRadius: size / 2 }}
+        accessibilityLabel={`Photo of ${name}`}
+      />
+    );
+  }
+  return (
+    <View style={{ width: size, alignItems: 'center', justifyContent: 'center' }}>
+      <Text style={{ fontFamily: F.display, fontSize: size * 0.6, color: C.mint }}>{initial}</Text>
     </View>
   );
 }

@@ -15,6 +15,11 @@ export interface Profile {
   about: string;
   /** Their own address. Where the app writes to them, and their account identity. */
   email: string;
+  /**
+   * Men only. A woman's profile shows her initial instead, which is the whole
+   * reason the field is optional rather than a placeholder image.
+   */
+  photo?: string;
   waliId?: string; // women only; profile is inactive without it
   /** Women only. Lets her wali write in her chats; he can always read either way. */
   waliMaySend?: boolean;

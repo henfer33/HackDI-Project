@@ -4,7 +4,7 @@ import { useMemo, useState } from 'react';
 import { Pressable, StyleSheet, Text, TextInput, View } from 'react-native';
 import { useApp } from '../store';
 import { C, F, S } from '../theme';
-import { Card, Empty, Loading, PageTitle, Pill, SectionLabel } from '../ui';
+import { Avatar, Card, Empty, Loading, PageTitle, Pill, SectionLabel } from '../ui';
 import { TIMELINES } from '../types';
 
 export default function Browse() {
@@ -15,20 +15,34 @@ export default function Browse() {
   const [minAge, setMinAge] = useState('');
   const [maxAge, setMaxAge] = useState('');
   const [timeline, setTimeline] = useState<string | null>(null);
+  const [city, setCity] = useState<string | null>(null);
   const [open, setOpen] = useState(false);
+
+  // Cities actually present in the data, so the chips can never offer an empty
+  // result. Sorted for a stable order between renders.
+  const cities = useMemo(
+    () => Array.from(new Set(profiles.filter((p) => p.role === 'woman').map((p) => p.location))).sort(),
+    [profiles],
+  );
+
+  const activeCount = [minAge, maxAge, timeline, city].filter(Boolean).length;
+  const clearAll = () => {
+    setMinAge(''); setMaxAge(''); setTimeline(null); setCity(null);
+  };
 
   const results = useMemo(
     () =>
       profiles.filter((p) => {
         if (p.role !== 'woman' || !p.waliId) return false;
-        if (q && !`${p.location} ${p.career} ${p.education}`.toLowerCase().includes(q.toLowerCase()))
+        if (q && !`${p.name} ${p.location} ${p.career} ${p.education}`.toLowerCase().includes(q.toLowerCase()))
           return false;
+        if (city && p.location !== city) return false;
         if (minAge && p.age < Number(minAge)) return false;
         if (maxAge && p.age > Number(maxAge)) return false;
         if (timeline && p.timeline !== timeline) return false;
         return true;
       }),
-    [profiles, q, minAge, maxAge, timeline],
+    [profiles, q, city, minAge, maxAge, timeline],
   );
 
   const statusFor = (id: string) =>
@@ -50,8 +64,9 @@ export default function Browse() {
           returnKeyType="search"
           clearButtonMode="while-editing"
         />
-        <Pressable onPress={() => setOpen((v) => !v)} style={styles.filterBtn}>
-          <Ionicons name="options-outline" size={16} color={C.mint} />
+        <Pressable onPress={() => setOpen((v) => !v)} style={styles.filterBtn} hitSlop={8}>
+          <Ionicons name="options-outline" size={18} color={activeCount ? C.gold : C.mint} />
+          {activeCount > 0 && <Text style={styles.filterCount}>{activeCount}</Text>}
         </Pressable>
       </View>
 
@@ -77,6 +92,26 @@ export default function Browse() {
               </Pressable>
             ))}
           </View>
+
+          <View style={{ height: 18 }} />
+          <SectionLabel>City</SectionLabel>
+          <View style={styles.chipRow}>
+            {cities.map((c) => (
+              <Pressable key={c} onPress={() => setCity(city === c ? null : c)}
+                style={[styles.chip, city === c && styles.chipOn]}>
+                <Text style={[styles.chipText, city === c && { color: '#14301F' }]}>{c}</Text>
+              </Pressable>
+            ))}
+          </View>
+
+          {activeCount > 0 && (
+            <>
+              <View style={{ height: 18 }} />
+              <Pressable onPress={clearAll} hitSlop={8}>
+                <Text style={styles.clear}>Clear filters</Text>
+              </Pressable>
+            </>
+          )}
         </Card>
       )}
 
@@ -95,12 +130,17 @@ export default function Browse() {
         const st = statusFor(p.id);
         return (
           <Card key={p.id} onPress={() => router.push(`/person/${p.id}`)}>
-            <View style={{ flexDirection: 'row', alignItems: 'baseline' }}>
-              <Text style={styles.name}>{p.name}</Text>
-              <Text style={styles.age}>{p.age}</Text>
+            <View style={{ flexDirection: 'row', alignItems: 'center', gap: 12 }}>
+              <Avatar name={p.name} photo={p.photo} size={44} />
+              <View style={{ flex: 1 }}>
+                <View style={{ flexDirection: 'row', alignItems: 'baseline' }}>
+                  <Text style={styles.name}>{p.name}</Text>
+                  <Text style={styles.age}>{p.age}</Text>
+                </View>
+                <Text style={styles.meta}>{p.location}</Text>
+              </View>
             </View>
-            <Text style={styles.meta}>{p.location}</Text>
-            <Text style={styles.meta}>{p.career} · {p.education}</Text>
+            <Text style={[styles.meta, { marginTop: 10 }]}>{p.career} · {p.education}</Text>
             <View style={styles.pills}>
               <Pill label={p.timeline} icon="time-outline" />
               <Pill label="Wali attached" tone="gold" icon="shield-checkmark" />
@@ -125,7 +165,9 @@ const styles = StyleSheet.create({
     borderRadius: S.pill, paddingHorizontal: 16, paddingVertical: 4, marginBottom: 14,
   },
   search: { flex: 1, color: C.cream, fontFamily: F.sans, fontSize: 15, paddingVertical: 12 },
-  filterBtn: { padding: 6 },
+  filterBtn: { padding: 6, flexDirection: 'row', alignItems: 'center', gap: 4 },
+  filterCount: { fontFamily: F.bold, fontSize: 12, color: C.gold },
+  clear: { fontFamily: F.semi, fontSize: 13.5, color: C.mint, textAlign: 'center', paddingVertical: 6 },
   input: {
     borderWidth: 1, borderColor: C.cardEdge, borderRadius: 14, paddingHorizontal: 14,
     paddingVertical: 11, fontFamily: F.sans, fontSize: 15, color: C.cream, backgroundColor: 'rgba(0,0,0,0.2)',

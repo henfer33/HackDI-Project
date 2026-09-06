@@ -2,7 +2,7 @@ import { StyleSheet, Text, View } from 'react-native';
 import { useApp } from '../../src/store';
 import { C, F } from '../../src/theme';
 import { useRouter } from 'expo-router';
-import { Button, Card, Field, Pill, Screen, ScreenHeader, SectionLabel } from '../../src/ui';
+import { Avatar, Button, Card, Field, Pill, Screen, ScreenHeader, SectionLabel } from '../../src/ui';
 
 export default function Me() {
   const router = useRouter();
@@ -20,7 +20,11 @@ export default function Me() {
 
   return (
     <Screen>
-      <View style={{ marginBottom: 4 }} />
+      {!!me?.photo && (
+        <View style={{ alignItems: 'center', marginBottom: 6 }}>
+          <Avatar name={me.name} photo={me.photo} size={92} />
+        </View>
+      )}
       <ScreenHeader
         eyebrow={isWali ? 'Guardian' : actor.role === 'man' ? 'Suitor' : 'Seeking marriage'}
         icon={isWali ? 'shield-checkmark' : 'leaf'}
