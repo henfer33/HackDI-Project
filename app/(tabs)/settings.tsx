@@ -158,42 +158,46 @@ export default function Settings() {
           How a guardian is notified when he has no account yet.
         </Text>
         <View style={styles.segment}>
-          {notifyOptions.map((o) => {
-            const usable = !myWali || o.key === 'app' || channelFor(myWali.contact, o.key) === o.key;
-            return (
-              <Pressable
-                key={o.key}
-                disabled={!usable}
-                onPress={() => setWaliNotify(o.key)}
-                style={[styles.segBtn, waliNotify === o.key && styles.segBtnOn, !usable && { opacity: 0.35 }]}>
-                <Text style={[styles.segText, waliNotify === o.key && { color: '#14301F', fontFamily: F.bold }]}>
-                  {o.label}
-                </Text>
-              </Pressable>
-            );
-          })}
+          {notifyOptions.map((o) => (
+            <Pressable
+              key={o.key}
+              onPress={() => setWaliNotify(o.key)}
+              style={[styles.segBtn, waliNotify === o.key && styles.segBtnOn]}>
+              <Text style={[styles.segText, waliNotify === o.key && { color: '#14301F', fontFamily: F.bold }]}>
+                {o.label}
+              </Text>
+            </Pressable>
+          ))}
         </View>
+
+        {waliNotify !== 'email' && (
+          <Text style={styles.channelNote}>
+            {waliNotify === 'sms'
+              ? 'SMS is coming. Only email is delivered today.'
+              : 'In-app notices are coming. Only email is delivered today.'}
+          </Text>
+        )}
 
         {myWali && (
           <>
             <Text style={styles.channelNote}>
               {kind === 'email'
-                ? `${myWali.name} has an email on file, so SMS is unavailable.`
+                ? `${myWali.name} will be emailed at ${myWali.contact}.`
                 : kind === 'phone'
-                  ? `${myWali.name} has a phone number on file, so email is unavailable.`
+                  ? `${myWali.name} has only a phone number on file, so he cannot be reached yet. Add an email address for him.`
                   : `${myWali.name}'s contact details are not a valid phone or email.`}
             </Text>
             <View style={{ height: 12 }} />
             <Button
               title={sending ? 'Sending' : `Notify ${myWali.name.split(' ')[0]} now`}
-              icon={kind === 'email' ? 'mail-outline' : 'chatbubble-outline'}
+              icon="mail-outline" 
               tone="ghost"
-              disabled={kind === 'invalid' || sending}
+              disabled={kind !== 'email' || sending}
               onPress={sendNotice}
             />
             <Text style={styles.channelNote}>
-              Sent for you when a provider is configured. Otherwise this opens your own Messages or
-              Mail app with the text ready, and nothing leaves until you tap send.
+              A request also emails him automatically the moment a suitor sends one. This button is
+              here to send it again.
             </Text>
           </>
         )}

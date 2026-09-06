@@ -1,4 +1,4 @@
-import { Linking, Platform } from 'react-native';
+import { Linking } from 'react-native';
 import { waliEmailHtml, waliEmailText } from './email';
 import { supabase } from './supabase';
 import { Wali, WaliNotify } from './types';
@@ -30,8 +30,6 @@ export function channelFor(contact: string, preferred: WaliNotify): WaliNotify {
   if (kind === 'phone') return 'sms';
   return 'app';
 }
-
-const digits = (s: string) => s.replace(/[^\d+]/g, '');
 
 export type SendPath = 'server' | 'apify' | 'composer';
 export interface SendResult {
@@ -129,6 +127,17 @@ export async function notifyWali(
     return { ok: false, channel, reason: 'This wali has no phone or email on file.' };
   }
 
+  // Only email is delivered. SMS is offered in the interface but has no sender
+  // behind it yet, so say so plainly rather than half-doing it through the
+  // device's own Messages app.
+  if (channel === 'sms') {
+    return {
+      ok: false,
+      channel,
+      reason: 'SMS notifications are not available yet. Give your wali an email address to reach him.',
+    };
+  }
+
   // Send it properly if a provider is wired up. Only if none is available do we
   // hand the message to the person's own Messages or Mail app.
   const to = wali.contact.trim();
@@ -140,11 +149,7 @@ export async function notifyWali(
     if (viaApify) return viaApify;
   }
 
-  const url =
-    channel === 'sms'
-      // iOS wants & before the body, Android wants ?
-      ? `sms:${digits(wali.contact)}${Platform.OS === 'ios' ? '&' : '?'}body=${encodeURIComponent(body)}`
-      : `mailto:${wali.contact.trim()}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+  const url = `mailto:${to}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
 
   try {
     const supported = await Linking.canOpenURL(url);

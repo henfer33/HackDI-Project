@@ -2,6 +2,7 @@ import React, {
   createContext, useCallback, useContext, useEffect, useMemo, useRef, useState,
 } from 'react';
 import { SEED_MESSAGES, SEED_PROFILES, SEED_REQUESTS, SEED_WALIS } from './seed';
+import { contactKind, notifyWali, requestHtml, requestMessage } from './notify';
 import { fetchAll, remote, subscribeAll } from './remote';
 import { isLive } from './supabase';
 import {
@@ -160,7 +161,26 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
     };
     if (isLive) remote.insertRequest(r).then(pull);
     else setRequests((xs) => [...xs, r]);
-  }, [pull]);
+
+    // The request has reached the wali, so tell him. Fire and forget: a failed
+    // send must not stop the request existing, and the app already shows it in
+    // his inbox either way.
+    // Email only. An SMS contact would fall through to the device composer,
+    // which would hijack the suitor's Messages app and hand him the wali's
+    // number: the opposite of what a wali is for. A phone-only wali sees the
+    // request in his inbox instead.
+    const g = walis.find((w) => w.id === woman.waliId);
+    const suitor = snap.current.profiles.find((p) => p.id === manId);
+    if (g && contactKind(g.contact) === 'email') {
+      notifyWali(
+        g,
+        'email',
+        'A request is waiting for your review',
+        requestMessage(g.name, woman.name, suitor?.name),
+        requestHtml(g.name, woman.name, suitor?.name),
+      ).catch(() => {});
+    }
+  }, [pull, walis]);
 
   const waliDecide: Ctx['waliDecide'] = useCallback((requestId, approve) => {
     const status = approve ? 'pending_woman' : 'declined_wali';
