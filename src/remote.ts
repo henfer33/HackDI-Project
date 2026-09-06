@@ -7,6 +7,7 @@ const toProfile = (r: any): Profile => ({
   education: r.education, career: r.career, timeline: r.timeline, about: r.about,
   email: r.email ?? '',
   photo: r.photo ?? undefined,
+  hidden: r.hidden ?? false,
   waliId: r.wali_id ?? undefined, waliMaySend: r.wali_may_send ?? false,
 });
 const toWali = (r: any): Wali => ({
@@ -72,6 +73,7 @@ export const remote = {
       ...(patch.timeline !== undefined && { timeline: patch.timeline }),
       ...(patch.about !== undefined && { about: patch.about }),
       ...(patch.email !== undefined && { email: patch.email }),
+      ...(patch.hidden !== undefined && { hidden: patch.hidden }),
     }).eq('id', id),
   updateWali: (id: string, patch: Partial<Wali>) =>
     supabase!.from('walis').update({
@@ -79,6 +81,12 @@ export const remote = {
       ...(patch.relationship !== undefined && { relationship: patch.relationship }),
       ...(patch.contact !== undefined && { contact: patch.contact }),
     }).eq('id', id),
+  deleteAccount: async (profileId: string, waliId?: string) => {
+    // Requests cascade to messages and meets via the foreign keys.
+    await supabase!.from('requests').delete().or(`man_id.eq.${profileId},woman_id.eq.${profileId}`);
+    if (waliId) await supabase!.from('walis').delete().eq('id', waliId);
+    return supabase!.from('profiles').delete().eq('id', profileId);
+  },
   setWaliMaySend: (womanId: string, may: boolean) =>
     supabase!.from('profiles').update({ wali_may_send: may }).eq('id', womanId),
   insertProfile: (p: Profile) =>

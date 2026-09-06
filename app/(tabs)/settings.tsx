@@ -13,6 +13,7 @@ export default function Settings() {
   const {
     actor, setActor, profiles, walis, reset,
     waliNotify, setWaliNotify, inboxFor, profile, wali, setWaliMaySend, loading,
+    updateProfile, deleteAccount,
   } = useApp();
 
   const me = actor.role === 'wali' ? undefined : profile(actor.id);
@@ -44,6 +45,22 @@ export default function Settings() {
     }
   };
 
+  const confirmDelete = () => {
+    if (!me) return;
+    const msg =
+      `This removes ${me.name}'s profile` +
+      (me.waliId ? ', the attached wali,' : '') +
+      ' and every request and message involving them. It cannot be undone.';
+    if (Platform.OS === 'web') {
+      if (window.confirm(`Delete this account?\n\n${msg}`)) deleteAccount(me.id);
+      return;
+    }
+    Alert.alert('Delete this account?', msg, [
+      { text: 'Cancel', style: 'cancel' },
+      { text: 'Delete', style: 'destructive', onPress: () => deleteAccount(me.id) },
+    ]);
+  };
+
   // Wipes every request, message and conversation. Shared, and irreversible.
   const confirmReset = () => {
     const msg = 'This clears every request, conversation and message for everyone. It cannot be undone.';
@@ -58,7 +75,6 @@ export default function Settings() {
   };
 
   const [notifications, setNotifications] = useState(true);
-  const [hideFromCommunity, setHideFromCommunity] = useState(false);
 
   // These are absent while the first fetch is in flight, and stay absent if the
   // demo rows were deleted, so no non-null assertions here.
@@ -180,8 +196,6 @@ export default function Settings() {
       <SectionLabel>Preferences</SectionLabel>
       <Row icon="notifications-outline" label="Notifications"
         onPress={() => setNotifications((v) => !v)} right={<Toggle on={notifications} />} />
-      <Row icon="eye-off-outline" label="Hide profile from community"
-        onPress={() => setHideFromCommunity((v) => !v)} right={<Toggle on={hideFromCommunity} />} />
 
       <SectionLabel>Account</SectionLabel>
       <Row icon="create-outline" label="Edit profile" onPress={() => router.push('/edit-profile')}
@@ -191,10 +205,38 @@ export default function Settings() {
       <Row icon="refresh-outline" label="Reset demo data" onPress={confirmReset}
         right={<Ionicons name="chevron-forward" size={16} color={C.muted} />} />
 
+      {me && (
+        <>
+          <SectionLabel>Danger zone</SectionLabel>
+          <View style={styles.danger}>
+            <Row
+              icon="eye-off-outline"
+              iconColor={C.danger}
+              label="Hide my profile"
+              onPress={() => updateProfile(me.id, { hidden: !me.hidden })}
+              right={<Toggle on={!!me.hidden} />}
+            />
+            <Text style={styles.dangerNote}>
+              While hidden, nobody can find you and no new requests reach you. Conversations you
+              have already accepted carry on. You can unhide at any time.
+            </Text>
+
+            <View style={{ height: 16 }} />
+            <Button
+              title="Delete my account"
+              tone="danger"
+              icon="trash-outline"
+              onPress={confirmDelete}
+            />
+            <Text style={styles.dangerNote}>
+              Permanent. Removes your profile{me.waliId ? ', your wali' : ''}, every request you
+              have sent or received, and every message in them. This cannot be undone.
+            </Text>
+          </View>
+        </>
+      )}
+
       <Text style={styles.footer}>KHITBAH · HACKATHON BUILD</Text>
-      <Text style={styles.footerSub}>
-        Religiosity is never filtered or verified here. That is between the individual and Allah.
-      </Text>
     </Screen>
   );
 }
@@ -219,6 +261,10 @@ const styles = StyleSheet.create({
   segBtn: { flex: 1, paddingVertical: 10, borderRadius: S.pill, alignItems: 'center' },
   segBtnOn: { backgroundColor: C.mint },
   segText: { fontFamily: F.sans, fontSize: 14, color: C.soft },
+  danger: {
+    borderWidth: 1, borderColor: C.dangerEdge, borderRadius: S.radius,
+    padding: 16, marginBottom: 8,
+  },
+  dangerNote: { fontFamily: F.sans, fontSize: 12.5, color: C.muted, lineHeight: 18, marginTop: 10 },
   footer: { fontFamily: F.display, fontSize: 13, color: C.faint, textAlign: 'center', marginTop: 26, letterSpacing: 2 },
-  footerSub: { fontFamily: F.sans, fontSize: 12, color: C.faint, textAlign: 'center', marginTop: 8, lineHeight: 18, paddingHorizontal: 16 },
 });

@@ -20,6 +20,8 @@ export interface Profile {
    * reason the field is optional rather than a placeholder image.
    */
   photo?: string;
+  /** Hidden profiles stay out of browse and receive nothing new. */
+  hidden?: boolean;
   waliId?: string; // women only; profile is inactive without it
   /** Women only. Lets her wali write in her chats; he can always read either way. */
   waliMaySend?: boolean;

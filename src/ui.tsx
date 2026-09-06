@@ -8,6 +8,7 @@ import {
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useApp } from './store';
+import { portrait } from './portraits';
 import { C, F, S, eyebrow } from './theme';
 
 /** Full-bleed gradient ground every screen sits on. */
@@ -181,11 +182,12 @@ export function Avatar({
 }) {
   const [failed, setFailed] = useState(false);
   const initial = (name || '?').trim().charAt(0).toUpperCase();
+  const source = portrait(photo);
 
-  if (photo && !failed) {
+  if (source && !failed) {
     return (
       <Image
-        source={{ uri: photo }}
+        source={source}
         onError={() => setFailed(true)}
         style={{ width: size, height: size, borderRadius: size / 2 }}
         accessibilityLabel={`Photo of ${name}`}

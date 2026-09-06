@@ -52,6 +52,8 @@ interface Ctx {
   setWaliNotify: (m: WaliNotify) => void;
   setWaliMaySend: (womanId: string, may: boolean) => void;
   updateProfile: (id: string, patch: Partial<Profile>) => void;
+  /** Removes the profile, its wali, and every request and message involving it. */
+  deleteAccount: (profileId: string) => void;
   updateWali: (id: string, patch: Partial<Wali>) => void;
 
   reset: () => void;
@@ -151,6 +153,7 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
   const sendRequest: Ctx['sendRequest'] = useCallback((manId, womanId, note) => {
     const woman = snap.current.profiles.find((p) => p.id === womanId);
     if (!woman?.waliId) return; // no wali attached => profile is not active
+    if (woman.hidden) return; // hidden profiles receive nothing new
     const r: Request = {
       id: uid('r'), manId, womanId, waliId: woman.waliId,
       status: 'pending_wali', note, createdAt: Date.now(),
@@ -247,6 +250,26 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
     else setWalis((xs) => xs.map((w) => (w.id === id ? { ...w, ...patch } : w)));
   }, [pull]);
 
+  const deleteAccount: Ctx['deleteAccount'] = useCallback((profileId) => {
+    const me = snap.current.profiles.find((p) => p.id === profileId);
+    const waliId = me?.waliId;
+    const doomed = snap.current.requests
+      .filter((r) => r.manId === profileId || r.womanId === profileId)
+      .map((r) => r.id);
+
+    if (isLive) {
+      remote.deleteAccount(profileId, waliId).then(pull);
+    } else {
+      setRequests((xs) => xs.filter((r) => !doomed.includes(r.id)));
+      setMessages((xs) => xs.filter((m) => !doomed.includes(m.requestId)));
+      setMeets((xs) => xs.filter((m) => !doomed.includes(m.requestId)));
+      if (waliId) setWalis((xs) => xs.filter((w) => w.id !== waliId));
+      setProfiles((xs) => xs.filter((p) => p.id !== profileId));
+    }
+    // Whoever was signed in no longer exists, so fall back to the seeded suitor.
+    setActor({ role: 'man', id: 'm1' });
+  }, [pull]);
+
   const setWaliMaySend: Ctx['setWaliMaySend'] = useCallback((womanId, may) => {
     if (isLive) remote.setWaliMaySend(womanId, may).then(pull);
     else setProfiles((xs) => xs.map((p) => (p.id === womanId ? { ...p, waliMaySend: may } : p)));
@@ -271,7 +294,7 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
     sendRequest, waliDecide, womanDecide,
     sendMessage, proposeMeet, confirmMeet, meetFor,
     threadsFor, inboxFor, lastMessage, counterpart,
-    waliNotify, setWaliNotify, setWaliMaySend, updateProfile, updateWali,
+    waliNotify, setWaliNotify, setWaliMaySend, updateProfile, updateWali, deleteAccount,
     reset,
   }), [
     profiles, walis, requests, messages, meets, actor, offline, loading,

@@ -1,47 +1,41 @@
 import { Message, Profile, Request, Wali } from './types';
 
-/**
- * Portraits come from randomuser.me, a free set of licensed photographs.
- * Men only: a woman's profile deliberately shows her initial instead.
- */
-const face = (n: number) => `https://randomuser.me/api/portraits/men/${n}.jpg`;
-
 export const SEED_PROFILES: Profile[] = [
   // Men
   {
     id: 'm1', role: 'man', name: 'Yusuf Adeyemi', age: 28, location: 'London, UK',
     education: 'BSc Computer Science, UCL', career: 'Backend engineer',
-    timeline: 'Within 6 months', email: 'yusuf.adeyemi@example.com', photo: face(32),
+    timeline: 'Within 6 months', email: 'yusuf.adeyemi@example.com', photo: 'm1',
     about: 'Born and raised in London. Family originally from Lagos. Looking to marry soon and settle here, close to both families insha Allah.',
   },
   {
     id: 'm2', role: 'man', name: 'Bilal Chaudhry', age: 31, location: 'Manchester, UK',
     education: 'MEng Civil Engineering, Leeds', career: 'Structural engineer',
-    timeline: 'Within 6 months', email: 'bilal.chaudhry@example.com', photo: face(51),
+    timeline: 'Within 6 months', email: 'bilal.chaudhry@example.com', photo: 'm2',
     about: 'Settled in Manchester with my own place. Hoping for someone who wants a family and is close to hers.',
   },
   {
     id: 'm3', role: 'man', name: 'Omar Benali', age: 26, location: 'Birmingham, UK',
     education: 'BA Accounting, Aston', career: 'Trainee accountant',
-    timeline: '6-12 months', email: 'omar.benali@example.com', photo: face(75),
+    timeline: '6-12 months', email: 'omar.benali@example.com', photo: 'm3',
     about: 'Moroccan family, born here. Finishing my qualification next year and want to marry after that insha Allah.',
   },
   {
     id: 'm4', role: 'man', name: 'Ibrahim Sesay', age: 34, location: 'Toronto, Canada',
     education: 'MD, McMaster University', career: 'Family physician',
-    timeline: 'Within 6 months', email: 'ibrahim.sesay@example.com', photo: face(11),
+    timeline: 'Within 6 months', email: 'ibrahim.sesay@example.com', photo: 'm4',
     about: 'Practice in Toronto. Widowed two years ago, no children. Looking to build a home again.',
   },
   {
     id: 'm5', role: 'man', name: 'Hamza Qureshi', age: 29, location: 'New York, USA',
     education: 'JD, Fordham Law', career: 'Immigration lawyer',
-    timeline: '1-2 years', email: 'hamza.qureshi@example.com', photo: face(64),
+    timeline: '1-2 years', email: 'hamza.qureshi@example.com', photo: 'm5',
     about: 'Work mostly with asylum cases. Want someone patient with the hours, and family close by.',
   },
   {
     id: 'm6', role: 'man', name: 'Suleiman Farah', age: 27, location: 'Melbourne, Australia',
     education: 'BCom, Monash', career: 'Data analyst',
-    timeline: '6-12 months', email: 'suleiman.farah@example.com', photo: face(83),
+    timeline: '6-12 months', email: 'suleiman.farah@example.com', photo: 'm6',
     about: 'Somali-Australian. Quiet, close to my mother and sisters, hoping for something similar.',
   },
 

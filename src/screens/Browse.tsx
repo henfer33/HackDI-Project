@@ -33,7 +33,7 @@ export default function Browse() {
   const results = useMemo(
     () =>
       profiles.filter((p) => {
-        if (p.role !== 'woman' || !p.waliId) return false;
+        if (p.role !== 'woman' || !p.waliId || p.hidden) return false;
         if (q && !`${p.name} ${p.location} ${p.career} ${p.education}`.toLowerCase().includes(q.toLowerCase()))
           return false;
         if (city && p.location !== city) return false;

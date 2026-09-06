@@ -13,6 +13,8 @@ create table profiles (
   timeline text not null,
   about text not null default '',
   email text,
+  photo text,
+  hidden boolean not null default false,
   wali_id text,
   wali_may_send boolean not null default false
 );
